@@ -1,0 +1,18 @@
+.shadowOut {
+  filter: drop-shadow(0 -12px 3px #00000028);
+}
+
+.nossaHistoriaPre {
+  background-image: url("../../../../public/common/onda_cinza_02.svg");
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+  background-position: bottom;
+}
+
+.nossaHistoriaPos {
+  background-image: url("../../../../public/common/onda_cinza_03.svg");
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+  background-position: bottom;
+  transform: rotate(180deg);
+}

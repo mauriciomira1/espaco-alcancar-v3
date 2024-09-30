@@ -1,0 +1,27 @@
+#lista li:not(:last-child)::after {
+  content: '';
+  display: block;
+  height: 1px;
+  background-color: #57949F;
+  /* Altere para a cor desejada */
+  margin: 6px 0;
+  /* Altere para o espaçamento desejado */
+}
+
+#lista li {
+  width: 15rem;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+#lista li:hover {
+  color: #DB876D;
+  transition: .2s;
+  cursor: pointer;
+  font-weight: bold;
+  width: 12rem;
+}
+
+#lista li:active {
+  color: #1E4857;
+}

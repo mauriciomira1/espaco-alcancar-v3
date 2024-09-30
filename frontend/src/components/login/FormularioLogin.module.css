@@ -1,0 +1,3 @@
+.errorMessage {
+  @apply font-paragrafos text-xs font-bold text-red-500
+}

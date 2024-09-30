@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.destaque-gg {
+  @apply font-destaque-gg text-4xl font-bold;
+}
+
+.destaque-g {
+  @apply font-destaque-g text-xl font-bold;
+}
+
+.destaque {
+  @apply font-destaque text-base font-bold;
+}
+
+.destaque-p {
+  @apply font-destaque-p text-sm font-bold;
+}
+
+.titulos {
+  @apply font-titulos text-base font-semibold;
+}
+
+.subtitulos {
+  @apply font-subtitulos text-sm font-semibold;
+}
+
+.paragrafos {
+  @apply font-paragrafos text-sm font-normal;
+}
+
+.citacao {
+  @apply font-citacao text-sm italic font-light;
+}
+
+.placeholder {
+  @apply font-placeholder text-sm font-normal;
+}
+
+.bg-main {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background: rgb(31, 21, 59);
+  background:
+    url("../../public/common/estrelas.svg"),
+    linear-gradient(180deg, #2D1C40, #30395A 73%, #39719A 100%);
+}

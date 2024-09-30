@@ -1,0 +1,22 @@
+.shadowOut {
+  filter: drop-shadow(0 -6px 4px #00000025);
+}
+
+.shadowOutDown {
+  filter: drop-shadow(0 -5px 2px #0000001f);
+}
+
+.container03Pre {
+  background-image: url("../../../../public/home/onda_dupla_01.svg");
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+  background-position: bottom;
+}
+
+.container03Pos {
+  background-image: url("../../../../public/home/onda_dupla_02.svg");
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+  background-position: bottom;
+  transform: rotate(180deg);
+}
