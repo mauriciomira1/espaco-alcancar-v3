@@ -5,7 +5,6 @@
 import styles from "./FormularioLogin.module.css";
 
 // Hooks do next
-import Link from "next/link";
 
 // Hooks de formulário
 import { useForm } from "react-hook-form";
@@ -19,6 +18,7 @@ import { useRouter } from "next/navigation";
 
 // Variáveis
 import config from "@/app/config/variables";
+import { Link } from "react-router-dom";
 
 // Validação de formulário com Zod
 const createUserFormSchema = z.object({
@@ -147,7 +147,7 @@ const FormularioLogin = () => {
       <p className="mt-3 cursor-default font-paragrafos text-sm font-semibold text-primaryColor">
         Ainda não tem cadastro?
         <Link
-          href="/cadastro"
+          to="/cadastro"
           className="ml-1 font-bold text-secondaryColor hover:text-orange-800"
         >
           Cadastre-se aqui
