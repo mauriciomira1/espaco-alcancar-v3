@@ -8,9 +8,6 @@ interface PrivateRoutesProps {
 const PrivateRoutes: FC<PrivateRoutesProps> = ({ Component }) => {
   const session = localStorage.getItem("espaco-alcancar") || "null";
 
-  // Remover ou comentar esta linha em produção
-  console.log(session);
-
   return session && session !== "null" ? (
     <Component />
   ) : (

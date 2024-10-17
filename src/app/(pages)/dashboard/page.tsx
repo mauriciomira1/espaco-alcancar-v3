@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 // Interfaces para tipar a resposta
 interface Address {
@@ -19,7 +20,7 @@ interface UserDashboardResponse {
   name: string;
   phone: string;
   email: string;
-  children: any[]; // Você pode definir uma interface específica para os filhos, se necessário
+  children: any[]; // Definir uma interface específica para os filhos, se necessário
   gender: "MALE" | "FEMALE";
   address: Address;
   profileType: ProfileType;
@@ -27,12 +28,22 @@ interface UserDashboardResponse {
 
 const Dashboard = () => {
   const [user, setUser] = useState<UserDashboardResponse | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const token = localStorage.getItem("espaco-alcancar");
 
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchUserData = async () => {
+      if (!token) {
+        console.error("Token not found");
+        setError("Token not found");
+        return;
+      }
+
+      console.log("Fetching user data with token:", token);
+
       try {
-        const response = await fetch("/me", {
+        const response = await fetch("http://localhost:8080/user/me", {
           method: "GET",
           headers: {
             Authorization: "Bearer " + token,
@@ -40,19 +51,39 @@ const Dashboard = () => {
           },
         });
 
+        if (response.status !== 200) {
+          // usar o router-dom para ir para a página de login
+          navigate("/login");
+
+          console.error("Token inválido");
+          setError("Token inválido");
+        }
+
+        console.log("Response status:", response.status);
+        console.log("Response headers:", response.headers);
+
         if (!response.ok) {
-          throw new Error("Network response failed");
+          const errorData = await response.json();
+          console.error("Error response:", errorData);
+          setError("Failed to fetch user data: " + errorData.message);
+          return;
         }
 
         const data = await response.json();
+        console.log("User data:", data);
         setUser(data);
       } catch (error) {
         console.error("Failed to fetch user data", error);
+        setError("Failed to fetch user data: " + (error as Error).message);
       }
     };
 
     fetchUserData();
   }, [token]);
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   if (!user) {
     return <div>Carregando...</div>;
@@ -61,8 +92,8 @@ const Dashboard = () => {
   return (
     <div className="flex flex-col items-center justify-center mx-4">
       <h1>Minha dashboard</h1>
-      <p>Meu nome é: {user?.name}</p>
-      <p>Meu email é: {user?.email}</p>
+      <p>Meu nome é: {user.name}</p>
+      <p>Meu email é: {user.email}</p>
     </div>
   );
 };

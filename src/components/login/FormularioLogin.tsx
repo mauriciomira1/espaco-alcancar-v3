@@ -22,7 +22,7 @@ import { Link } from "react-router-dom";
 const createUserFormSchema = z.object({
   email: z
     .string()
-    .nonempty("Você precisa inserir o seu e-mail.")
+    .min(1, "Você precisa inserir o seu e-mail.")
     .email("Formato de e-mail inválido")
     .toLowerCase(),
   password: z.string().min(6, "Você precisa inserir uma senha."),
@@ -46,6 +46,9 @@ const FormularioLogin = () => {
   // Estado para controlar a visibilidade da senha
   const [showPassword, setShowPassword] = useState(false);
 
+  // Estado para armazenar a mensagem de erro
+  const [errorMessage, setErrorMessage] = useState("");
+
   // Função que executa a requisição para o login
   const loginUser = async (data: loginUserFormData) => {
     try {
@@ -60,6 +63,11 @@ const FormularioLogin = () => {
         }),
       });
 
+      if (response.status === 401) {
+        setErrorMessage("Email ou senha incorretos.");
+        return;
+      }
+
       if (!response.ok) {
         throw new Error("Falha no login. Verifique suas credenciais.");
       }
@@ -69,10 +77,11 @@ const FormularioLogin = () => {
       localStorage.setItem("espaco-alcancar", result);
 
       // Redirecionar o usuário para o dashboard
-      router.push(`${config.frontBaseUrl}/dashboard`);
+      router.replace(`${config.frontBaseUrl}/dashboard`);
     } catch (error) {
       console.error("Erro ao fazer login:", error);
       // Adicione aqui uma lógica para mostrar uma mensagem de erro ao usuário
+      setErrorMessage("Erro ao fazer login. Tente novamente mais tarde.");
     }
   };
 
@@ -104,6 +113,11 @@ const FormularioLogin = () => {
         />
         {errors.email && (
           <span className={styles.errorMessage}>{errors.email.message}</span>
+        )}
+        {errorMessage && (
+          <div className="mb-1 text-red-500 font-semibold text-sm">
+            {errorMessage}
+          </div>
         )}
       </div>
 
