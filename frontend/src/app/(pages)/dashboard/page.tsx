@@ -19,19 +19,18 @@ interface UserDashboardResponse {
   name: string;
   phone: string;
   email: string;
-  password: string; // Cuidado ao manipular senhas
   children: any[]; // Você pode definir uma interface específica para os filhos, se necessário
-  gender: string; // Pode ser tipado como um enum se você tiver valores fixos
+  gender: "MALE" | "FEMALE";
   address: Address;
   profileType: ProfileType;
 }
 
 const Dashboard = () => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<UserDashboardResponse | null>(null);
   const token = localStorage.getItem("espaco-alcancar");
 
   useEffect(() => {
-    const fetchuserData = async () => {
+    const fetchUserData = async () => {
       try {
         const response = await fetch("/me", {
           method: "GET",
@@ -51,13 +50,19 @@ const Dashboard = () => {
         console.error("Failed to fetch user data", error);
       }
     };
+
+    fetchUserData();
   }, [token]);
 
+  if (!user) {
+    return <div>Carregando...</div>;
+  }
+
   return (
-    <div className="flex items-center justify-center mx-4">
+    <div className="flex flex-col items-center justify-center mx-4">
       <h1>Minha dashboard</h1>
-      <p>Meu nome é: {user.name}</p>
-      <p>Meu email é: </p>
+      <p>Meu nome é: {user?.name}</p>
+      <p>Meu email é: {user?.email}</p>
     </div>
   );
 };

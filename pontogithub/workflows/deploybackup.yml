@@ -1,0 +1,33 @@
+name: "Deploy para VPS"
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Baixar o código"
+        uses: actions/checkout@v4
+
+      - name: "Copiar arquivos para VPS"
+        uses: appleboy/ssh-action@master
+        with:
+          host: "${{ secrets.HOST }}"
+          username: ${{ secrets.USERNAME }}
+          password: "${{ secrets.PASSWORD }}"
+          port: ${{ secrets.PORT }}
+          script: |
+            cd /root/espaco-alcancar-v3/frontend
+            git pull origin main
+            npm install
+            npm run build
+
+            # Parando qualquer instância
+            pm2 stop espaco-alcancar || true
+
+            # Iniciando a aplicação com PM2
+            pm2 start npm --name "espaco-alcancar-v3" -- start

@@ -4,8 +4,6 @@
 // CSS
 import styles from "./FormularioLogin.module.css";
 
-// Hooks do next
-
 // Hooks de formulário
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -51,7 +49,7 @@ const FormularioLogin = () => {
   // Função que executa a requisição para o login
   const loginUser = async (data: loginUserFormData) => {
     try {
-      const response = await fetch(`${config.apiBaseUrl}/dashboard`, {
+      const response = await fetch(`http://localhost:8080/auth`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -69,10 +67,12 @@ const FormularioLogin = () => {
       const result = await response.text();
       console.log("Login bem-sucedido:", result);
       localStorage.setItem("espaco-alcancar", result);
-      // Aqui você pode redirecionar o usuário, armazenar tokens, etc.
-      router.push(`${config.apiBaseUrl}/dashboard`);
+
+      // Redirecionar o usuário para o dashboard
+      router.push(`${config.frontBaseUrl}/dashboard`);
     } catch (error) {
       console.error("Erro ao fazer login:", error);
+      // Adicione aqui uma lógica para mostrar uma mensagem de erro ao usuário
     }
   };
 
