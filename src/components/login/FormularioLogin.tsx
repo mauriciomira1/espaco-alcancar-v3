@@ -1,4 +1,4 @@
-// Bibliotecas intaladas: zod @hookform/resolvers react-hook-form
+// Bibliotecas instaladas: zod @hookform/resolvers react-hook-form
 "use client";
 
 // CSS
@@ -52,7 +52,7 @@ const FormularioLogin = () => {
   // Função que executa a requisição para o login
   const loginUser = async (data: loginUserFormData) => {
     try {
-      const response = await fetch(`http://localhost:8080/auth`, {
+      const response = await fetch(`${config.apiBaseUrl}/auth`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -73,14 +73,15 @@ const FormularioLogin = () => {
       }
 
       const result = await response.text();
-      console.log("Login bem-sucedido:", result);
       localStorage.setItem("espaco-alcancar", result);
+      console.log("Login bem-sucedido:", result);
 
       // Redirecionar o usuário para o dashboard
-      router.replace(`${config.frontBaseUrl}/dashboard`);
+      // router.push("/dashboard");
+      window.location.href = "/dashboard";
+      router.push("/dashboard");
     } catch (error) {
       console.error("Erro ao fazer login:", error);
-      // Adicione aqui uma lógica para mostrar uma mensagem de erro ao usuário
       setErrorMessage("Erro ao fazer login. Tente novamente mais tarde.");
     }
   };
@@ -135,6 +136,9 @@ const FormularioLogin = () => {
           className="text-sm border-gray-300 focus:outline-blue-600 px-1.5 contrast-more:border-primaryColor w-full h-8 bg-white border rounded hover:bg-gray-100 hover:border-gray-400 duration-150"
           {...register("password")}
         />
+        {errors.password && (
+          <span className={styles.errorMessage}>{errors.password.message}</span>
+        )}
         <button
           type="button"
           className="absolute pt-4 right-2 top-1/2 transform -translate-y-1/2"

@@ -32,6 +32,7 @@ const Dashboard = () => {
   const token = localStorage.getItem("espaco-alcancar");
 
   const navigate = useNavigate();
+
   useEffect(() => {
     const fetchUserData = async () => {
       if (!token) {
@@ -52,15 +53,11 @@ const Dashboard = () => {
         });
 
         if (response.status !== 200) {
-          // usar o router-dom para ir para a página de login
           navigate("/login");
-
           console.error("Token inválido");
           setError("Token inválido");
+          return;
         }
-
-        console.log("Response status:", response.status);
-        console.log("Response headers:", response.headers);
 
         if (!response.ok) {
           const errorData = await response.json();
@@ -70,16 +67,14 @@ const Dashboard = () => {
         }
 
         const data = await response.json();
-        console.log("User data:", data);
         setUser(data);
       } catch (error) {
-        console.error("Failed to fetch user data", error);
         setError("Failed to fetch user data: " + (error as Error).message);
       }
     };
 
     fetchUserData();
-  }, [token]);
+  }, [token, navigate]);
 
   if (error) {
     return <div>Error: {error}</div>;
