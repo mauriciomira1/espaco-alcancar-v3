@@ -93,9 +93,9 @@ const FormularioCadastro = () => {
       password: data.password,
       relationship: data.relationship,
       address: {
-        address: "Área Especial 01",
-        city: "Gama/DF",
-        complement: "601D, Flex Gama",
+        address: "",
+        city: "",
+        complement: "",
       },
       profileType: {
         patient: true,
@@ -106,7 +106,7 @@ const FormularioCadastro = () => {
 
     console.log("Payload: ", payload);
     try {
-      const response = await fetch(`http://localhost:8080/user/new`, {
+      const response = await fetch(`${config.apiBaseUrl}/user/new`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -140,9 +140,10 @@ const FormularioCadastro = () => {
 
       const userId = await response.json();
       console.log("Cadastro bem-sucedido:", userId);
+      setSuccessMessage(true);
 
       // Redirecionar o usuário para a página de login
-      router.push("/login");
+      // router.push("/login");
     } catch (error) {
       console.error("Erro ao fazer cadastro:", error);
       setErrorMessage("Erro ao fazer cadastro. Tente novamente mais tarde.");
@@ -152,14 +153,20 @@ const FormularioCadastro = () => {
   return (
     <>
       {successMessage ? (
-        <div className="flex w-full flex-col items-center justify-center rounded-xl bg-white px-10 py-8">
+        <div className="flex w-full flex-col items-center justify-center rounded-xl bg-white px-14 py-8">
           <h2 className="font-titulos text-xl font-bold text-gray-900">
-            Conta criada com sucesso. Faça login.
+            Conta criada com sucesso! Faça login.
           </h2>
+          <Link
+            to="/login"
+            className="mt-4 font-bold text-secondaryColor hover:bg-verde-escuro text-white rounded-md items-center justify-center bg-verde-claro px-4 py-2"
+          >
+            Ir para a página de login
+          </Link>
         </div>
       ) : (
         <form
-          className="flex w-11/12 max-w-7xl flex-col items-center justify-center rounded-xl bg-white px-10 py-8 max-sm:px-8 md:w-[26rem]"
+          className="flex w-11/12 max-w-7xl flex-col items-center justify-center rounded-xl bg-white px-10 py-8 max-sm:px-8 md:w-[26rem] max-sm:w-11/12"
           onSubmit={handleSubmit(createUser)}
         >
           <h2 className="font-titulos text-xl font-bold text-gray-900">
@@ -365,7 +372,7 @@ const FormularioCadastro = () => {
               to="/login"
               className="ml-1 font-bold text-secondaryColor hover:text-orange-800"
             >
-              Faça login aqui
+              Faça login.
             </Link>
           </p>
         </form>

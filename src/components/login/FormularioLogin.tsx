@@ -88,7 +88,7 @@ const FormularioLogin = () => {
 
   return (
     <form
-      className="flex w-11/12 max-w-7xl flex-col items-center justify-center rounded-xl bg-white px-10 py-8 max-sm:px-8 md:w-[26rem]"
+      className="flex w-11/12 max-w-7xl flex-col items-center justify-center rounded-xl bg-white px-10 py-8 max-sm:px-8 md:w-[26rem] max-sm:w-11/12"
       onSubmit={handleSubmit(loginUser)}
     >
       <h2 className="font-titulos text-xl font-bold text-gray-900">
@@ -166,9 +166,9 @@ const FormularioLogin = () => {
         Ainda não tem cadastro?
         <Link
           to="/cadastro"
-          className="ml-1 font-bold text-secondaryColor hover:text-orange-800"
+          className="ml-1 font-bold text-secondaryColor text-verde-claro hover:text-orange-800"
         >
-          Cadastre-se aqui
+          Cadastre-se aqui.
         </Link>
       </p>
     </form>

@@ -2,6 +2,7 @@
 import config from "@/app/config/variables";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { FaSignOutAlt } from "react-icons/fa"; // Importing the logout icon
 
 // Interfaces para tipar a resposta
 interface Address {
@@ -77,6 +78,11 @@ const Dashboard = () => {
     fetchUserData();
   }, [token, navigate]);
 
+  const handleLogout = () => {
+    localStorage.removeItem("espaco-alcancar");
+    navigate(0);
+  };
+
   if (error) {
     return <div>Error: {error}</div>;
   }
@@ -85,10 +91,24 @@ const Dashboard = () => {
     return <div>Carregando...</div>;
   }
 
+  const firstName = user.name.split(" ")[0];
+
   return (
-    <div className="flex flex-col items-center justify-center mx-4">
-      <h1>Minha dashboard</h1>
-      <p>Meu nome é: {user.name}</p>
+    <div className="flex flex-col items-center justify-center bg-white">
+      <div className="w-full flex justify-end p-4">
+        <button
+          onClick={handleLogout}
+          className="text-preto hover:text-amber-700"
+        >
+          <FaSignOutAlt size={36} />
+        </button>
+      </div>
+      <h1 className="font-destaque-gg text-destaque-gg pt-12 pb-4 text-verde-escuro">
+        Área do paciente
+      </h1>
+      <p className="font-titulos text-verde-claro pb-14">
+        Bem vindo(a) {firstName}
+      </p>
       <p>Meu email é: {user.email}</p>
     </div>
   );

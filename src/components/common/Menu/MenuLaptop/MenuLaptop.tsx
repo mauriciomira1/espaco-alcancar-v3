@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import logoCompacto from "@/../public/common/logo_nome.svg";
 import Image from "next/image";
 import BtnMarcarAgora from "./btnMarcarAgora";
@@ -6,6 +7,18 @@ import ItemMenuModelo2 from "./itemMenuModelo2";
 import { Link } from "react-router-dom";
 
 const MenuLaptop = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    // Simulação de verificação de autenticação
+    const token = localStorage.getItem("espaco-alcancar"); // ou qualquer outra lógica para verificar se o usuário está logado
+    if (token) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, []);
+
   return (
     <nav className="bg-white drop-shadow-lg w-full flex justify-between items-center px-4 h-16">
       <div>
@@ -25,8 +38,14 @@ const MenuLaptop = () => {
           <ItemMenu to="/servicos" name="Serviços" />
           <ItemMenu to="/sobre" name="Sobre nós" />
           <ItemMenu to="/trabalhe-conosco" name="Trabalhe conosco" />
-          <ItemMenuModelo2 to="/login" name="Entrar" />
-          <ItemMenuModelo2 to="/cadastro" name="Cadastrar" />
+          {isLoggedIn ? (
+            <ItemMenuModelo2 to="/dashboard" name="Área do Usuário" />
+          ) : (
+            <>
+              <ItemMenuModelo2 to="/login" name="Entrar" />
+              <ItemMenuModelo2 to="/cadastro" name="Cadastrar" />
+            </>
+          )}
           <BtnMarcarAgora href="https://wa.me/5561994250846" />
         </ul>
       </div>
