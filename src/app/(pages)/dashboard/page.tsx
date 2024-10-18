@@ -1,4 +1,5 @@
 "use client";
+import config from "@/app/config/variables";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -44,7 +45,7 @@ const Dashboard = () => {
       console.log("Fetching user data with token:", token);
 
       try {
-        const response = await fetch("http://localhost:8080/user/me", {
+        const response = await fetch(`${config.apiBaseUrl}/user/me`, {
           method: "GET",
           headers: {
             Authorization: "Bearer " + token,
