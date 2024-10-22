@@ -2,7 +2,8 @@
 import config from "@/app/config/variables";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaSignOutAlt } from "react-icons/fa"; // Importing the logout icon
+import MenuLaptopDashboard from "./MenuLaptopDashboard";
+import MenuMobileDashboard from "./MenuMobileDashboard";
 
 // Interfaces para tipar a resposta
 interface Address {
@@ -94,22 +95,19 @@ const Dashboard = () => {
   const firstName = user.name.split(" ")[0];
 
   return (
-    <div className="flex flex-col items-center justify-center bg-white">
-      <div className="w-full flex justify-end p-4">
-        <button
-          onClick={handleLogout}
-          className="text-preto hover:text-amber-700"
-        >
-          <FaSignOutAlt size={36} />
-        </button>
-      </div>
-      <h1 className="font-destaque-gg text-destaque-gg pt-12 pb-4 text-verde-escuro">
+    <div className="flex flex-col items-center bg-white h-screen">
+      <h1 className="font-destaque-gg text-destaque-gg pt-8 pb-2 text-verde-escuro">
         Área do paciente
       </h1>
       <p className="font-titulos text-verde-claro pb-14">
         Bem vindo(a) {firstName}
       </p>
       <p>Meu email é: {user.email}</p>
+
+      {/* Menu inferior para telas menores que 768px */}
+      <MenuMobileDashboard handleLogout={handleLogout} />
+      {/* Menu lateral esquerda para telas maiores que 768px */}
+      <MenuLaptopDashboard handleLogout={handleLogout} />
     </div>
   );
 };

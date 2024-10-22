@@ -4,10 +4,11 @@ import Image from "next/image";
 import BtnMarcarAgora from "./btnMarcarAgora";
 import ItemMenu from "./itemMenu";
 import ItemMenuModelo2 from "./itemMenuModelo2";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const MenuLaptop = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     // Simulação de verificação de autenticação
@@ -38,9 +39,10 @@ const MenuLaptop = () => {
           <ItemMenu to="/servicos" name="Serviços" />
           <ItemMenu to="/sobre" name="Sobre nós" />
           <ItemMenu to="/trabalhe-conosco" name="Trabalhe conosco" />
-          {isLoggedIn ? (
+          {isLoggedIn && location.pathname !== "/dashboard" && (
             <ItemMenuModelo2 to="/dashboard" name="Área do Usuário" />
-          ) : (
+          )}
+          {!isLoggedIn && (
             <>
               <ItemMenuModelo2 to="/login" name="Entrar" />
               <ItemMenuModelo2 to="/cadastro" name="Cadastrar" />

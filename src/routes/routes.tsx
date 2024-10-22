@@ -30,8 +30,8 @@ const RoutesComponent = () => {
         />
         <Route path="*" element={<Home />} />
       </Routes>
-      <NossasRedesSociais />
-      <FooterResponsive />
+      {/* <NossasRedesSociais />
+      <FooterResponsive /> */}
     </div>
   );
 };

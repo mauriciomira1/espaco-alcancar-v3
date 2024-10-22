@@ -1,11 +1,13 @@
 "use client";
-import Link from "next/link";
+
 import { IoIosClose } from "react-icons/io";
 import BtnMarcarAgora from "../MenuLaptop/btnMarcarAgora";
 import { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 
 const WindowMenu = ({ handleClose }: { handleClose: () => void }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const token = localStorage.getItem("espaco-alcancar");
@@ -27,37 +29,38 @@ const WindowMenu = ({ handleClose }: { handleClose: () => void }) => {
       >
         <IoIosClose />
       </button>
-      <Link className={`mt-4 ${linksClass}`} href="/" onClick={handleClose}>
+      <Link className={`mt-4 ${linksClass}`} to="/" onClick={handleClose}>
         Início
       </Link>
-      <Link className={linksClass} href="/nosso-espaco" onClick={handleClose}>
+      <Link className={linksClass} to="/nosso-espaco" onClick={handleClose}>
         Nosso espaço
       </Link>
-      <Link className={linksClass} href="/servicos" onClick={handleClose}>
+      <Link className={linksClass} to="/servicos" onClick={handleClose}>
         Serviços
       </Link>
-      <Link className={linksClass} href="/sobre" onClick={handleClose}>
+      <Link className={linksClass} to="/sobre" onClick={handleClose}>
         Sobre nós
       </Link>
-      <Link
-        className={linksClass}
-        href="/trabalhe-conosco"
-        onClick={handleClose}
-      >
+      <Link className={linksClass} to="/trabalhe-conosco" onClick={handleClose}>
         Trabalhe Conosco
       </Link>
-      {isLoggedIn ? (
-        <Link className={linksClass} href="/dashboard" onClick={handleClose}>
+      {isLoggedIn && location.pathname !== "/dashboard" && (
+        <Link
+          className="text-white bg-verde-escuro uppercase py-3 w-4/5 font-subtitulos text-center mb-6"
+          to="/dashboard"
+          onClick={handleClose}
+        >
           Área do Usuário
         </Link>
-      ) : (
+      )}
+      {!isLoggedIn && (
         <>
-          <Link className={linksClass} href="/login" onClick={handleClose}>
+          <Link className={linksClass} to="/login" onClick={handleClose}>
             Entrar
           </Link>
           <Link
             className="text-verde-escuro uppercase py-4 w-4/5 font-subtitulos text-center mb-6"
-            href="/cadastro"
+            to="/cadastro"
             onClick={handleClose}
           >
             Cadastrar
