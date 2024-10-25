@@ -43,8 +43,6 @@ const Dashboard = () => {
         return;
       }
 
-      console.log("Fetching user data with token:", token);
-
       try {
         const response = await fetch(`${config.apiBaseUrl}/user/me`, {
           method: "GET",

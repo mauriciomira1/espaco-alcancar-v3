@@ -1,4 +1,5 @@
 "use client";
+import config from "@/app/config/variables";
 import React, { useState, useEffect } from "react";
 import { FaArrowLeft, FaCheck } from "react-icons/fa";
 import { Link } from "react-router-dom";
@@ -31,11 +32,32 @@ const Rate: React.FC = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
-    console.log("Rating:", rating);
-    console.log("Review:", review);
+
+    try {
+      const response = await fetch(`${config.apiBaseUrl}/dashboard/rate/new`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("espaco-alcancar")}`,
+        },
+        body: JSON.stringify({
+          stars: rating,
+          comment: review,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to submit rating");
+      }
+
+      const data = await response.json();
+      console.log("Response from server:", data);
+    } catch (error) {
+      console.error("Error submitting rating:", error);
+    }
   };
 
   return (
