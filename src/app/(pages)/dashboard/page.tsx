@@ -1,9 +1,8 @@
 "use client";
 import config from "@/app/config/variables";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import MenuLaptopDashboard from "./MenuLaptopDashboard";
-import MenuMobileDashboard from "./MenuMobileDashboard";
+import { Outlet, useNavigate } from "react-router-dom";
+import DashboardMenu from "./DashboardMenu";
 
 // Interfaces para tipar a resposta
 interface Address {
@@ -102,12 +101,9 @@ const Dashboard = () => {
       <p className="font-titulos text-verde-claro pb-14">
         Bem vindo(a) {firstName}
       </p>
-      <p>Meu email é: {user.email}</p>
-
-      {/* Menu inferior para telas menores que 768px */}
-      <MenuMobileDashboard handleLogout={handleLogout} />
-      {/* Menu lateral esquerda para telas maiores que 768px */}
-      <MenuLaptopDashboard handleLogout={handleLogout} />
+      {/* <p>Meu email é: {user.email}</p> */}
+      <Outlet />
+      <DashboardMenu handleLogout={handleLogout} />
     </div>
   );
 };

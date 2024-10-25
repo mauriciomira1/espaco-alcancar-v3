@@ -7,7 +7,6 @@ import { Link, useLocation } from "react-router-dom";
 
 const WindowMenu = ({ handleClose }: { handleClose: () => void }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const location = useLocation();
 
   useEffect(() => {
     const token = localStorage.getItem("espaco-alcancar");
@@ -44,29 +43,13 @@ const WindowMenu = ({ handleClose }: { handleClose: () => void }) => {
       <Link className={linksClass} to="/trabalhe-conosco" onClick={handleClose}>
         Trabalhe Conosco
       </Link>
-      {isLoggedIn && location.pathname !== "/dashboard" && (
-        <Link
-          className="text-white bg-verde-escuro uppercase py-3 w-4/5 font-subtitulos text-center mb-6"
-          to="/dashboard"
-          onClick={handleClose}
-        >
-          Área do Usuário
-        </Link>
-      )}
-      {!isLoggedIn && (
-        <>
-          <Link className={linksClass} to="/login" onClick={handleClose}>
-            Entrar
-          </Link>
-          <Link
-            className="text-verde-escuro uppercase py-4 w-4/5 font-subtitulos text-center mb-6"
-            to="/cadastro"
-            onClick={handleClose}
-          >
-            Cadastrar
-          </Link>
-        </>
-      )}
+      <Link
+        className="text-white bg-verde-escuro uppercase py-3 w-4/5 font-subtitulos text-center mb-6"
+        to="/dashboard"
+        onClick={handleClose}
+      >
+        Área do Usuário
+      </Link>
       <BtnMarcarAgora href="https://wa.me/5561994250846" />
     </>
   );

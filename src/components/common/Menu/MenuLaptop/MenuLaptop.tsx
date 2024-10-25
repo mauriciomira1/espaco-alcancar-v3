@@ -39,15 +39,15 @@ const MenuLaptop = () => {
           <ItemMenu to="/servicos" name="Serviços" />
           <ItemMenu to="/sobre" name="Sobre nós" />
           <ItemMenu to="/trabalhe-conosco" name="Trabalhe conosco" />
-          {isLoggedIn && location.pathname !== "/dashboard" && (
-            <ItemMenuModelo2 to="/dashboard" name="Área do Usuário" />
+          <ItemMenuModelo2 to="/dashboard" name="Área do Paciente" />
+          {/* {isLoggedIn && location.pathname !== "/dashboard" && (
           )}
           {!isLoggedIn && (
             <>
               <ItemMenuModelo2 to="/login" name="Entrar" />
               <ItemMenuModelo2 to="/cadastro" name="Cadastrar" />
             </>
-          )}
+          )} */}
           <BtnMarcarAgora href="https://wa.me/5561994250846" />
         </ul>
       </div>
