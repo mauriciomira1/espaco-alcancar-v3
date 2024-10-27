@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FaArrowLeft, FaPencilAlt } from "react-icons/fa";
 import config from "@/app/config/variables";
+import { headers } from "next/headers";
 
 type FormData = {
   name: string;
@@ -44,11 +45,26 @@ const Profile: React.FC = () => {
   });
 
   const [userData, setUserData] = useState(null);
+  const [isEditing, setIsEditing] = useState<{ [key: string]: boolean }>({
+    name: false,
+    phone: false,
+    address: false,
+    city: false,
+    complement: false,
+    relationship: false,
+    password: false,
+    confirmPassword: false,
+  });
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch(`${config.apiBaseUrl}/user/me`);
+        const token = localStorage.getItem("espaco-alcancar");
+        const response = await fetch(`${config.apiBaseUrl}/user/me`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         const data = await response.json();
         setUserData(data);
         setFormData({
@@ -127,6 +143,14 @@ const Profile: React.FC = () => {
     }
   };
 
+  const toggleEdit = (field: string) => {
+    setIsEditing((prev) => ({ ...prev, [field]: !prev[field] }));
+  };
+
+  const labelClassesName = `font-paragrafos`;
+  const paragraphClassesName = `font-paragrafos`;
+  const inputClassesName = `font-paragrafos`;
+
   return (
     <div className="w-full h-screen bg-white p-4">
       <Link
@@ -137,181 +161,292 @@ const Profile: React.FC = () => {
         Voltar
       </Link>
       <form className="space-y-4">
-        <div className="flex flex-col space-y-1">
-          <label htmlFor="name" className="text-sm font-paragrafos">
+        <div className="flex space-y-1">
+          <label htmlFor="name" className={labelClassesName}>
             Nome:
           </label>
           <div className="flex items-center space-x-2">
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              className="flex-1 p-2 border border-gray-300 rounded"
-            />
+            {isEditing.name ? (
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                className="input-common"
+              />
+            ) : (
+              <p className="input-common">{formData.name}</p>
+            )}
             <button
               type="button"
-              onClick={() => handleUpdate("name")}
-              className="p-2"
+              onClick={() => toggleEdit("name")}
+              className="button-common"
             >
               <FaPencilAlt />
             </button>
+            {isEditing.name && (
+              <button
+                type="button"
+                onClick={() => handleUpdate("name")}
+                className="button-common"
+              >
+                Salvar
+              </button>
+            )}
           </div>
         </div>
         <div className="flex flex-col space-y-1">
-          <label htmlFor="phone" className="text-sm font-paragrafos">
+          <label htmlFor="phone" className="label-common">
             Telefone:
           </label>
           <div className="flex items-center space-x-2">
-            <input
-              type="text"
-              id="phone"
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              className="flex-1 p-2 border border-gray-300 rounded"
-            />
+            {isEditing.phone ? (
+              <input
+                type="text"
+                id="phone"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                className="input-common"
+              />
+            ) : (
+              <p className="input-common">{formData.phone}</p>
+            )}
             <button
               type="button"
-              onClick={() => handleUpdate("phone")}
-              className="p-2"
+              onClick={() => toggleEdit("phone")}
+              className="button-common"
             >
               <FaPencilAlt />
             </button>
+            {isEditing.phone && (
+              <button
+                type="button"
+                onClick={() => handleUpdate("phone")}
+                className="button-common"
+              >
+                Salvar
+              </button>
+            )}
           </div>
         </div>
         <div className="border-2 border-gray-200 p-3 rounded-md">
           <div className="flex flex-col space-y-1">
-            <label htmlFor="address" className="text-sm font-paragrafos">
+            <label htmlFor="address" className="label-common">
               Endereço:
             </label>
             <div className="flex items-center space-x-2">
-              <input
-                type="text"
-                id="address"
-                name="address.address"
-                value={formData.address.address}
-                onChange={handleChange}
-                className="flex-1 p-2 border border-gray-300 rounded"
-              />
+              {isEditing.address ? (
+                <input
+                  type="text"
+                  id="address"
+                  name="address.address"
+                  value={formData.address.address}
+                  onChange={handleChange}
+                  className="input-common"
+                />
+              ) : (
+                <p className="input-common">{formData.address.address}</p>
+              )}
               <button
                 type="button"
-                onClick={() => handleUpdate("address")}
-                className="p-2"
+                onClick={() => toggleEdit("address")}
+                className="button-common"
               >
                 <FaPencilAlt />
               </button>
+              {isEditing.address && (
+                <button
+                  type="button"
+                  onClick={() => handleUpdate("address")}
+                  className="button-common"
+                >
+                  Salvar
+                </button>
+              )}
             </div>
           </div>
           <div className="flex flex-col space-y-1">
-            <label htmlFor="city" className="text-sm font-paragrafos">
+            <label htmlFor="city" className="label-common">
               Cidade:
             </label>
             <div className="flex items-center space-x-2">
-              <input
-                type="text"
-                id="city"
-                name="address.city"
-                value={formData.address.city}
-                onChange={handleChange}
-                className="flex-1 p-2 border border-gray-300 rounded"
-              />
+              {isEditing.city ? (
+                <input
+                  type="text"
+                  id="city"
+                  name="address.city"
+                  value={formData.address.city}
+                  onChange={handleChange}
+                  className="input-common"
+                />
+              ) : (
+                <p className="input-common">{formData.address.city}</p>
+              )}
               <button
                 type="button"
-                onClick={() => handleUpdate("address")}
-                className="p-2"
+                onClick={() => toggleEdit("city")}
+                className="button-common"
               >
                 <FaPencilAlt />
               </button>
+              {isEditing.city && (
+                <button
+                  type="button"
+                  onClick={() => handleUpdate("address")}
+                  className="button-common"
+                >
+                  Salvar
+                </button>
+              )}
             </div>
           </div>
           <div className="flex flex-col space-y-1">
-            <label htmlFor="complement" className="text-sm font-paragrafos">
+            <label htmlFor="complement" className="label-common">
               Complemento:
             </label>
             <div className="flex items-center space-x-2">
-              <input
-                type="text"
-                id="complement"
-                name="address.complement"
-                value={formData.address.complement}
-                onChange={handleChange}
-                className="flex-1 p-2 border border-gray-300 rounded"
-              />
+              {isEditing.complement ? (
+                <input
+                  type="text"
+                  id="complement"
+                  name="address.complement"
+                  value={formData.address.complement}
+                  onChange={handleChange}
+                  className="input-common"
+                />
+              ) : (
+                <p className="input-common">{formData.address.complement}</p>
+              )}
               <button
                 type="button"
-                onClick={() => handleUpdate("address")}
-                className="p-2"
+                onClick={() => toggleEdit("complement")}
+                className="button-common"
               >
                 <FaPencilAlt />
               </button>
+              {isEditing.complement && (
+                <button
+                  type="button"
+                  onClick={() => handleUpdate("address")}
+                  className="button-common"
+                >
+                  Salvar
+                </button>
+              )}
             </div>
           </div>
         </div>
         <div className="flex flex-col space-y-1">
-          <label htmlFor="relationship" className="text-sm font-paragrafos">
+          <label htmlFor="relationship" className="label-common">
             Relacionamento:
           </label>
           <div className="flex items-center space-x-2">
-            <select
-              id="relationship"
-              name="relationship"
-              value={formData.relationship}
-              onChange={handleChange}
-              className="flex-1 p-2 border border-gray-300 rounded"
-            >
-              <option value="" disabled>
-                Selecione
-              </option>
-              <option value="FATHER">Pai</option>
-              <option value="MOTHER">Mãe</option>
-              <option value="OTHER">Outro</option>
-            </select>
+            {isEditing.relationship ? (
+              <select
+                id="relationship"
+                name="relationship"
+                value={formData.relationship}
+                onChange={handleChange}
+                className="input-common"
+              >
+                <option value="" disabled>
+                  Selecione
+                </option>
+                <option value="FATHER">Pai</option>
+                <option value="MOTHER">Mãe</option>
+                <option value="OTHER">Outro</option>
+              </select>
+            ) : (
+              <p className="input-common">{formData.relationship}</p>
+            )}
             <button
               type="button"
-              onClick={() => handleUpdate("relationship")}
-              className="p-2"
+              onClick={() => toggleEdit("relationship")}
+              className="button-common"
             >
               <FaPencilAlt />
             </button>
+            {isEditing.relationship && (
+              <button
+                type="button"
+                onClick={() => handleUpdate("relationship")}
+                className="button-common"
+              >
+                Salvar
+              </button>
+            )}
           </div>
         </div>
         <div className="flex flex-col space-y-1">
-          <label htmlFor="password" className="text-sm font-paragrafos">
+          <label htmlFor="password" className="label-common">
             Senha:
           </label>
           <div className="flex items-center space-x-2">
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              className="flex-1 p-2 border border-gray-300 rounded"
-            />
-          </div>
-        </div>
-        <div className="flex flex-col space-y-1">
-          <label htmlFor="confirmPassword" className="text-sm font-paragrafos">
-            Confirmar Senha:
-          </label>
-          <div className="flex items-center space-x-2">
-            <input
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              className="flex-1 p-2 border border-gray-300 rounded"
-            />
+            {isEditing.password ? (
+              <input
+                type="password"
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                className="input-common"
+              />
+            ) : (
+              <p className="input-common">******</p>
+            )}
             <button
               type="button"
-              onClick={() => handleUpdate("password")}
-              className="p-2"
+              onClick={() => toggleEdit("password")}
+              className="button-common"
             >
               <FaPencilAlt />
             </button>
+            {isEditing.password && (
+              <button
+                type="button"
+                onClick={() => handleUpdate("password")}
+                className="button-common"
+              >
+                Salvar
+              </button>
+            )}
+          </div>
+        </div>
+        <div className="flex flex-col space-y-1">
+          <label htmlFor="confirmPassword" className="label-common">
+            Confirmar Senha:
+          </label>
+          <div className="flex items-center space-x-2">
+            {isEditing.confirmPassword ? (
+              <input
+                type="password"
+                id="confirmPassword"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                className="input-common"
+              />
+            ) : (
+              <p className="input-common">******</p>
+            )}
+            <button
+              type="button"
+              onClick={() => toggleEdit("confirmPassword")}
+              className="button-common"
+            >
+              <FaPencilAlt />
+            </button>
+            {isEditing.confirmPassword && (
+              <button
+                type="button"
+                onClick={() => handleUpdate("password")}
+                className="button-common"
+              >
+                Salvar
+              </button>
+            )}
           </div>
         </div>
       </form>

@@ -5,7 +5,7 @@ import astronautaCoracao from "@/../public/common/astronauta_foguete.svg";
 // Animação
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 const MissaoVisaoValores = () => {
   useEffect(() => {
