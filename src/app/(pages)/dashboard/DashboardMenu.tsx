@@ -11,11 +11,11 @@ const DashboardMenu: React.FC<DashboardMenuProps> = ({ handleLogout }) => {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5 gap-8 justify-center">
       <Link
-        to="/dashboard/activities"
+        to="/dashboard/fillout"
         className="text-white items-center justify-center flex flex-col p-4 rounded bg-verde-escuro active:bg-verde-claro cursor-pointer duration-150"
       >
         <FaFileAlt size={36} />
-        <p className="text-xs mt-1.5">Atividades</p>
+        <p className="text-xs mt-1.5">Preenchimento</p>
       </Link>
       <Link
         to="/dashboard/materials"

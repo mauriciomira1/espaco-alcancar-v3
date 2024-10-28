@@ -1,16 +1,14 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { FaArrowLeft, FaPencilAlt } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
+import { FaArrowLeft, FaCheck, FaPencilAlt } from "react-icons/fa";
 import config from "@/app/config/variables";
-import { headers } from "next/headers";
+import Notification from "./notification";
 
 type FormData = {
   name: string;
   email: string;
   phone: string;
-  password: string;
-  confirmPassword: string;
   relationship: string;
   address: {
     address: string;
@@ -29,8 +27,6 @@ const Profile: React.FC = () => {
     name: "",
     email: "",
     phone: "",
-    password: "",
-    confirmPassword: "",
     relationship: "",
     address: {
       address: "",
@@ -45,16 +41,33 @@ const Profile: React.FC = () => {
   });
 
   const [userData, setUserData] = useState(null);
-  const [isEditing, setIsEditing] = useState<{ [key: string]: boolean }>({
-    name: false,
-    phone: false,
-    address: false,
-    city: false,
-    complement: false,
-    relationship: false,
-    password: false,
-    confirmPassword: false,
-  });
+  const [isEditing, setIsEditing] = useState<{ [key: string]: boolean }>({});
+  const [notification, setNotification] = useState<{
+    visible: boolean;
+    message: string;
+    type: "success" | "error";
+  }>({ visible: false, message: "", type: "success" });
+
+  const navigate = useNavigate();
+
+  const relationshipOptions = {
+    FATHER: "Pai",
+    MOTHER: "Mãe",
+    OTHER: "Outro",
+  };
+
+  const fieldLabels = {
+    name: "Nome",
+    email: "Email",
+    phone: "Telefone",
+    relationship: "Relacionamento",
+    address: "Endereço",
+    city: "Cidade",
+    complement: "Complemento",
+    patient: "Paciente",
+    professional: "Profissional",
+    admin: "Admin",
+  };
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -65,14 +78,18 @@ const Profile: React.FC = () => {
             Authorization: `Bearer ${token}`,
           },
         });
+
+        if (response.status !== 200) {
+          navigate("/login");
+          return;
+        }
+
         const data = await response.json();
         setUserData(data);
         setFormData({
           name: data.name || "",
           email: data.email || "",
           phone: data.phone || "",
-          password: "",
-          confirmPassword: "",
           relationship: data.relationship || "",
           address: {
             address: data.address?.address || "",
@@ -87,11 +104,16 @@ const Profile: React.FC = () => {
         });
       } catch (error) {
         console.error("Error fetching user data:", error);
+        setNotification({
+          visible: true,
+          message: `Erro ao buscar dados do usuário. Tente novamente mais tarde.`,
+          type: "error",
+        });
       }
     };
 
     fetchUserData();
-  }, []);
+  }, [navigate]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -114,32 +136,46 @@ const Profile: React.FC = () => {
     }
   };
 
-  const handleUpdate = async (field: string) => {
-    if (
-      field === "password" &&
-      formData.password !== formData.confirmPassword
-    ) {
-      alert("Passwords do not match!");
-      return;
-    }
-
+  const handleUpdate = async (field: keyof typeof fieldLabels) => {
     try {
       const response = await fetch(`${config.apiBaseUrl}/user/edit`, {
-        method: "POST",
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("espaco-alcancar")}`,
         },
-        body: JSON.stringify({ [field]: (formData as any)[field] }),
+        body: JSON.stringify({
+          name: formData.name,
+          phone: formData.phone,
+          relationship: formData.relationship,
+          address: {
+            address: formData.address.address,
+            city: formData.address.city,
+            complement: formData.address.complement,
+          },
+        }),
       });
       if (!response.ok) {
         throw new Error("Failed to update user data");
       }
       const updatedData = await response.json();
       setUserData(updatedData);
-      alert("Dados atualizados com sucesso!");
+      setIsEditing((prevState) => ({
+        ...prevState,
+        [field]: false,
+      }));
+      setNotification({
+        visible: true,
+        message: `O dado de ${fieldLabels[field]} foi atualizado`,
+        type: "success",
+      });
     } catch (error) {
       console.error("Error updating user data:", error);
-      alert("Erro ao atualizar os dados.");
+      setNotification({
+        visible: true,
+        message: "Erro ao atualizar os dados.",
+        type: "error",
+      });
     }
   };
 
@@ -147,25 +183,28 @@ const Profile: React.FC = () => {
     setIsEditing((prev) => ({ ...prev, [field]: !prev[field] }));
   };
 
-  const labelClassesName = `font-paragrafos`;
-  const paragraphClassesName = `font-paragrafos`;
-  const inputClassesName = `font-paragrafos`;
+  const labelClassesName = `font-subtitulos text-sm`;
+  const paragraphClassesName = `font-paragrafos pb-1 text-sm`;
+  const inputClassesName = `font-paragrafos text-sm bg-gray-200 rounded-md border-[1px] border-gray-400 px-2 py-0.5`;
+  const divClassesName = `flex space-y-1 items-center gap-1`;
+  const pencilClassesName = `text-gray-500 text-xs`;
+  const saveBtnClassesName = `bg-verde-escuro text-white h-6 font-paragrafos text-xs rounded-md px-2 py-0.5`;
 
   return (
     <div className="w-full h-screen bg-white p-4">
       <Link
         to="/dashboard"
-        className="flex items-center text-verde-escuro mb-4"
+        className="flex items-center justify-center bg-verde-escuro text-white mb-8 w-20 rounded-md p-1"
       >
         <FaArrowLeft className="mr-1" />
         Voltar
       </Link>
-      <form className="space-y-4">
-        <div className="flex space-y-1">
+      <form className="space-y-2">
+        <div className={divClassesName}>
           <label htmlFor="name" className={labelClassesName}>
             Nome:
           </label>
-          <div className="flex items-center space-x-2">
+          <div className="flex space-x-2">
             {isEditing.name ? (
               <input
                 type="text"
@@ -173,15 +212,15 @@ const Profile: React.FC = () => {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                className="input-common"
+                className={inputClassesName}
               />
             ) : (
-              <p className="input-common">{formData.name}</p>
+              <p className={paragraphClassesName}>{formData.name}</p>
             )}
             <button
               type="button"
               onClick={() => toggleEdit("name")}
-              className="button-common"
+              className={pencilClassesName}
             >
               <FaPencilAlt />
             </button>
@@ -189,15 +228,15 @@ const Profile: React.FC = () => {
               <button
                 type="button"
                 onClick={() => handleUpdate("name")}
-                className="button-common"
+                className={saveBtnClassesName}
               >
-                Salvar
+                <FaCheck />
               </button>
             )}
           </div>
         </div>
-        <div className="flex flex-col space-y-1">
-          <label htmlFor="phone" className="label-common">
+        <div className={divClassesName}>
+          <label htmlFor="phone" className={labelClassesName}>
             Telefone:
           </label>
           <div className="flex items-center space-x-2">
@@ -208,15 +247,15 @@ const Profile: React.FC = () => {
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
-                className="input-common"
+                className={inputClassesName}
               />
             ) : (
-              <p className="input-common">{formData.phone}</p>
+              <p className={paragraphClassesName}>{formData.phone}</p>
             )}
             <button
               type="button"
               onClick={() => toggleEdit("phone")}
-              className="button-common"
+              className={pencilClassesName}
             >
               <FaPencilAlt />
             </button>
@@ -224,122 +263,122 @@ const Profile: React.FC = () => {
               <button
                 type="button"
                 onClick={() => handleUpdate("phone")}
-                className="button-common"
+                className={saveBtnClassesName}
               >
-                Salvar
+                <FaCheck />
               </button>
             )}
           </div>
         </div>
-        <div className="border-2 border-gray-200 p-3 rounded-md">
-          <div className="flex flex-col space-y-1">
-            <label htmlFor="address" className="label-common">
-              Endereço:
-            </label>
-            <div className="flex items-center space-x-2">
-              {isEditing.address ? (
-                <input
-                  type="text"
-                  id="address"
-                  name="address.address"
-                  value={formData.address.address}
-                  onChange={handleChange}
-                  className="input-common"
-                />
-              ) : (
-                <p className="input-common">{formData.address.address}</p>
-              )}
+        <div className={divClassesName}>
+          <label htmlFor="city" className={labelClassesName}>
+            Cidade:
+          </label>
+          <div className="flex items-center space-x-2">
+            {isEditing.city ? (
+              <input
+                type="text"
+                id="city"
+                name="address.city"
+                value={formData.address.city}
+                onChange={handleChange}
+                className={inputClassesName}
+              />
+            ) : (
+              <p className={paragraphClassesName}>{formData.address.city}</p>
+            )}
+            <button
+              type="button"
+              onClick={() => toggleEdit("city")}
+              className={pencilClassesName}
+            >
+              <FaPencilAlt />
+            </button>
+            {isEditing.city && (
               <button
                 type="button"
-                onClick={() => toggleEdit("address")}
-                className="button-common"
+                onClick={() => handleUpdate("city")}
+                className={saveBtnClassesName}
               >
-                <FaPencilAlt />
+                <FaCheck />
               </button>
-              {isEditing.address && (
-                <button
-                  type="button"
-                  onClick={() => handleUpdate("address")}
-                  className="button-common"
-                >
-                  Salvar
-                </button>
-              )}
-            </div>
-          </div>
-          <div className="flex flex-col space-y-1">
-            <label htmlFor="city" className="label-common">
-              Cidade:
-            </label>
-            <div className="flex items-center space-x-2">
-              {isEditing.city ? (
-                <input
-                  type="text"
-                  id="city"
-                  name="address.city"
-                  value={formData.address.city}
-                  onChange={handleChange}
-                  className="input-common"
-                />
-              ) : (
-                <p className="input-common">{formData.address.city}</p>
-              )}
-              <button
-                type="button"
-                onClick={() => toggleEdit("city")}
-                className="button-common"
-              >
-                <FaPencilAlt />
-              </button>
-              {isEditing.city && (
-                <button
-                  type="button"
-                  onClick={() => handleUpdate("address")}
-                  className="button-common"
-                >
-                  Salvar
-                </button>
-              )}
-            </div>
-          </div>
-          <div className="flex flex-col space-y-1">
-            <label htmlFor="complement" className="label-common">
-              Complemento:
-            </label>
-            <div className="flex items-center space-x-2">
-              {isEditing.complement ? (
-                <input
-                  type="text"
-                  id="complement"
-                  name="address.complement"
-                  value={formData.address.complement}
-                  onChange={handleChange}
-                  className="input-common"
-                />
-              ) : (
-                <p className="input-common">{formData.address.complement}</p>
-              )}
-              <button
-                type="button"
-                onClick={() => toggleEdit("complement")}
-                className="button-common"
-              >
-                <FaPencilAlt />
-              </button>
-              {isEditing.complement && (
-                <button
-                  type="button"
-                  onClick={() => handleUpdate("address")}
-                  className="button-common"
-                >
-                  Salvar
-                </button>
-              )}
-            </div>
+            )}
           </div>
         </div>
-        <div className="flex flex-col space-y-1">
-          <label htmlFor="relationship" className="label-common">
+        <div className={divClassesName}>
+          <label htmlFor="address" className={labelClassesName}>
+            Endereço:
+          </label>
+          <div className="flex items-center space-x-2">
+            {isEditing.address ? (
+              <input
+                type="text"
+                id="address"
+                name="address.address"
+                value={formData.address.address}
+                onChange={handleChange}
+                className={inputClassesName}
+              />
+            ) : (
+              <p className={paragraphClassesName}>{formData.address.address}</p>
+            )}
+            <button
+              type="button"
+              onClick={() => toggleEdit("address")}
+              className={pencilClassesName}
+            >
+              <FaPencilAlt />
+            </button>
+            {isEditing.address && (
+              <button
+                type="button"
+                onClick={() => handleUpdate("address")}
+                className={saveBtnClassesName}
+              >
+                <FaCheck />
+              </button>
+            )}
+          </div>
+        </div>
+        <div className={divClassesName}>
+          <label htmlFor="complement" className={labelClassesName}>
+            Complemento:
+          </label>
+          <div className="flex items-center space-x-2">
+            {isEditing.complement ? (
+              <input
+                type="text"
+                id="complement"
+                name="address.complement"
+                value={formData.address.complement}
+                onChange={handleChange}
+                className={inputClassesName}
+              />
+            ) : (
+              <p className={paragraphClassesName}>
+                {formData.address.complement}
+              </p>
+            )}
+            <button
+              type="button"
+              onClick={() => toggleEdit("complement")}
+              className={pencilClassesName}
+            >
+              <FaPencilAlt />
+            </button>
+            {isEditing.complement && (
+              <button
+                type="button"
+                onClick={() => handleUpdate("complement")}
+                className={saveBtnClassesName}
+              >
+                <FaCheck />
+              </button>
+            )}
+          </div>
+        </div>
+        <div className={divClassesName}>
+          <label htmlFor="relationship" className={labelClassesName}>
             Relacionamento:
           </label>
           <div className="flex items-center space-x-2">
@@ -349,22 +388,25 @@ const Profile: React.FC = () => {
                 name="relationship"
                 value={formData.relationship}
                 onChange={handleChange}
-                className="input-common"
+                className={inputClassesName}
               >
-                <option value="" disabled>
-                  Selecione
-                </option>
-                <option value="FATHER">Pai</option>
-                <option value="MOTHER">Mãe</option>
-                <option value="OTHER">Outro</option>
+                {Object.entries(relationshipOptions).map(([value, label]) => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                ))}
               </select>
             ) : (
-              <p className="input-common">{formData.relationship}</p>
+              <p className={paragraphClassesName}>
+                {relationshipOptions[
+                  formData.relationship as keyof typeof relationshipOptions
+                ] || formData.relationship}
+              </p>
             )}
             <button
               type="button"
               onClick={() => toggleEdit("relationship")}
-              className="button-common"
+              className={pencilClassesName}
             >
               <FaPencilAlt />
             </button>
@@ -372,84 +414,24 @@ const Profile: React.FC = () => {
               <button
                 type="button"
                 onClick={() => handleUpdate("relationship")}
-                className="button-common"
+                className={saveBtnClassesName}
               >
-                Salvar
-              </button>
-            )}
-          </div>
-        </div>
-        <div className="flex flex-col space-y-1">
-          <label htmlFor="password" className="label-common">
-            Senha:
-          </label>
-          <div className="flex items-center space-x-2">
-            {isEditing.password ? (
-              <input
-                type="password"
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                className="input-common"
-              />
-            ) : (
-              <p className="input-common">******</p>
-            )}
-            <button
-              type="button"
-              onClick={() => toggleEdit("password")}
-              className="button-common"
-            >
-              <FaPencilAlt />
-            </button>
-            {isEditing.password && (
-              <button
-                type="button"
-                onClick={() => handleUpdate("password")}
-                className="button-common"
-              >
-                Salvar
-              </button>
-            )}
-          </div>
-        </div>
-        <div className="flex flex-col space-y-1">
-          <label htmlFor="confirmPassword" className="label-common">
-            Confirmar Senha:
-          </label>
-          <div className="flex items-center space-x-2">
-            {isEditing.confirmPassword ? (
-              <input
-                type="password"
-                id="confirmPassword"
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                className="input-common"
-              />
-            ) : (
-              <p className="input-common">******</p>
-            )}
-            <button
-              type="button"
-              onClick={() => toggleEdit("confirmPassword")}
-              className="button-common"
-            >
-              <FaPencilAlt />
-            </button>
-            {isEditing.confirmPassword && (
-              <button
-                type="button"
-                onClick={() => handleUpdate("password")}
-                className="button-common"
-              >
-                Salvar
+                <FaCheck />
               </button>
             )}
           </div>
         </div>
       </form>
+      {notification.visible && (
+        <Notification
+          message={notification.message}
+          duration={2000}
+          onClose={() =>
+            setNotification({ visible: false, message: "", type: "success" })
+          }
+          type={notification.type}
+        />
+      )}
     </div>
   );
 };

@@ -1,20 +1,23 @@
-"use client";
-import config from "@/app/config/variables";
-import React, { useState, useEffect } from "react";
-import { FaArrowLeft, FaCheck } from "react-icons/fa";
-import { Link } from "react-router-dom";
+"use client"; // Indica que este código deve ser executado no cliente.
+import config from "@/app/config/variables"; // Importa a configuração de variáveis.
+import React, { useState, useEffect } from "react"; // Importa React e hooks.
+import { FaArrowLeft, FaCheck, FaTimesCircle } from "react-icons/fa"; // Importa ícones.
+import { Link } from "react-router-dom"; // Importa o componente Link do react-router-dom.
 
 const Rate: React.FC = () => {
-  const [rating, setRating] = useState(0);
-  const [hover, setHover] = useState(0);
-  const [review, setReview] = useState("");
-  const [submitted, setSubmitted] = useState(false);
-  const [charCount, setCharCount] = useState(300);
+  const [rating, setRating] = useState(0); // Estado para a avaliação.
+  const [hover, setHover] = useState(0); // Estado para o hover das estrelas.
+  const [review, setReview] = useState(""); // Estado para o texto da avaliação.
+  const [submitted, setSubmitted] = useState(false); // Estado para verificar se a avaliação foi enviada.
+  const [charCount, setCharCount] = useState(300); // Estado para contar os caracteres restantes.
+  const [error, setError] = useState(false); // Estado para verificar se houve erro no envio.
 
+  // Atualiza a contagem de caracteres restantes sempre que o texto da avaliação muda.
   useEffect(() => {
     setCharCount(300 - review.length);
   }, [review]);
 
+  // Função para obter o emoji correspondente à avaliação.
   const getEmoji = (rating: number) => {
     switch (rating) {
       case 1:
@@ -32,11 +35,12 @@ const Rate: React.FC = () => {
     }
   };
 
+  // Função para lidar com o envio do formulário.
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
 
     try {
+      // Faz uma requisição POST para enviar a avaliação.
       const response = await fetch(`${config.apiBaseUrl}/dashboard/rate/new`, {
         method: "POST",
         headers: {
@@ -44,19 +48,21 @@ const Rate: React.FC = () => {
           Authorization: `Bearer ${localStorage.getItem("espaco-alcancar")}`,
         },
         body: JSON.stringify({
-          stars: rating,
+          stars: rating, // Envia a avaliação como parte do corpo da requisição.
           comment: review,
         }),
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to submit rating");
-      }
-
       const data = await response.json();
-      console.log("Response from server:", data);
+      if (data) {
+        setSubmitted(true);
+        setError(false);
+      } else {
+        setError(true);
+      }
     } catch (error) {
       console.error("Error submitting rating:", error);
+      setError(true);
     }
   };
 
@@ -71,11 +77,18 @@ const Rate: React.FC = () => {
           <div className="text-center flex flex-col items-center justify-center">
             <FaCheck className="text-6xl text-green-500 mb-4" />
             <h1 className="text-2xl font-destaque mb-4">
-              A sua avaliação foi enviada.
+              Ebaa! A sua avaliação foi enviada.
             </h1>
             <p className="text-sm font-paragrafos">
-              Volte e altere a qualquer momento. Muito obrigado pelo seu
-              feedback. :)
+              Volte e avalie-nos novamente a qualquer momento. Muito obrigado
+              pelo seu feedback. :)
+            </p>
+          </div>
+        ) : error ? (
+          <div className="w-full h-screen flex flex-col items-center justify-center bg-white p-4">
+            <FaTimesCircle className="text-red-500 text-6xl mb-4" />
+            <p className="text-xl">
+              Houve uma falha no envio da avaliação. Tente mais tarde por favor.
             </p>
           </div>
         ) : (

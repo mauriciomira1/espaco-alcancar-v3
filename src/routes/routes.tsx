@@ -9,10 +9,10 @@ import NossoEspaco from "@/app/(pages)/nosso-espaco/page";
 import Servicos from "@/app/(pages)/servicos/page";
 import Sobre from "@/app/(pages)/sobre/page";
 import TrabalheConosco from "@/app/(pages)/trabalhe-conosco/page";
-import Activities from "@/app/(pages)/dashboard/activities/page";
 import Rate from "@/app/(pages)/dashboard/rate/page";
 import Profile from "@/app/(pages)/dashboard/profile/page";
 import Materials from "@/app/(pages)/dashboard/materials/page";
+import Fillout from "@/app/(pages)/dashboard/fillout/page";
 
 const RoutesComponent = () => {
   return (
@@ -31,8 +31,8 @@ const RoutesComponent = () => {
           element={<PrivateRoutes Component={Dashboard} />}
         />
         <Route
-          path="/dashboard/activities"
-          element={<PrivateRoutes Component={Activities} />}
+          path="/dashboard/fillout"
+          element={<PrivateRoutes Component={Fillout} />}
         />
         <Route
           path="/dashboard/rate"
