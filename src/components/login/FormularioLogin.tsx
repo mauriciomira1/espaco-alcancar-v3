@@ -8,7 +8,7 @@ import styles from "./FormularioLogin.module.css";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import React, { useState } from "react";
 
 // Ícones
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -31,7 +31,7 @@ const createUserFormSchema = z.object({
 // Criando um typeof para evitar o erro em 'errors' dentro do return
 type loginUserFormData = z.infer<typeof createUserFormSchema>;
 
-const FormularioLogin = () => {
+const FormularioLogin: React.FC = () => {
   const router = useRouter();
 
   // register (usado para validar os inputs); handleSubmit (usado para enviar o Form); formState (usado para emitir a mensagem do erro)
@@ -49,8 +49,12 @@ const FormularioLogin = () => {
   // Estado para armazenar a mensagem de erro
   const [errorMessage, setErrorMessage] = useState("");
 
+  // Estado para controlar o estado de carregamento
+  const [loading, setLoading] = useState(false);
+
   // Função que executa a requisição para o login
   const loginUser = async (data: loginUserFormData) => {
+    setLoading(true);
     try {
       const response = await fetch(`${config.apiBaseUrl}/auth`, {
         method: "POST",
@@ -77,12 +81,13 @@ const FormularioLogin = () => {
       console.log("Login bem-sucedido:", result);
 
       // Redirecionar o usuário para o dashboard
-      // router.push("/dashboard");
       window.location.href = "/dashboard";
       router.push("/dashboard");
     } catch (error) {
       console.error("Erro ao fazer login:", error);
       setErrorMessage("Erro ao fazer login. Tente novamente mais tarde.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -156,9 +161,35 @@ const FormularioLogin = () => {
         <div className="flex items-start w-full my-2">
           <button
             type="submit"
-            className="font-titulos text-xs font-semibold text-white bg-verde-claro rounded py-2 px-6 hover:bg-verde-escuro duration-150 active:bg-sky-950"
+            className="mt-4 w-full h-10 bg-verde-claro text-white font-bold rounded disabled:opacity-50"
+            disabled={loading}
           >
-            Entrar
+            {loading ? (
+              <div className="flex items-center justify-center">
+                <svg
+                  className="animate-spin h-5 w-5 mr-3 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+              </div>
+            ) : (
+              "Entrar"
+            )}
           </button>
         </div>
       </div>
@@ -174,4 +205,5 @@ const FormularioLogin = () => {
     </form>
   );
 };
+
 export default FormularioLogin;

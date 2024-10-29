@@ -40,6 +40,7 @@ const Dashboard = () => {
       if (!token) {
         console.error("Token not found");
         setError("Token not found");
+        navigate("/login");
         return;
       }
 
