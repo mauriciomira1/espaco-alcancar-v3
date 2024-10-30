@@ -97,11 +97,6 @@ const FormularioCadastro = () => {
         city: "",
         complement: "",
       },
-      profileType: {
-        patient: true,
-        professional: false,
-        admin: false,
-      },
     };
 
     console.log("Payload: ", payload);

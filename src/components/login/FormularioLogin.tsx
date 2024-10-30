@@ -52,6 +52,8 @@ const FormularioLogin: React.FC = () => {
   // Estado para controlar o estado de carregamento
   const [loading, setLoading] = useState(false);
 
+  const [roles, setRoles] = useState<string[]>([]);
+
   // Função que executa a requisição para o login
   const loginUser = async (data: loginUserFormData) => {
     setLoading(true);
@@ -76,13 +78,13 @@ const FormularioLogin: React.FC = () => {
         throw new Error("Falha no login. Verifique suas credenciais.");
       }
 
-      const result = await response.text();
-      localStorage.setItem("espaco-alcancar", result);
-      console.log("Login bem-sucedido:", result);
+      const result = await response.json();
+      const token = result.token;
+      setRoles(result.roles);
 
-      // Redirecionar o usuário para o dashboard
+      localStorage.setItem("espaco-alcancar", token);
+
       window.location.href = "/dashboard";
-      router.push("/dashboard");
     } catch (error) {
       console.error("Erro ao fazer login:", error);
       setErrorMessage("Erro ao fazer login. Tente novamente mais tarde.");
