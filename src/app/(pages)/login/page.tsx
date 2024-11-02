@@ -17,6 +17,12 @@ const Login = () => {
               Voltar para Página inicial
             </div>
           </Link>
+          <a
+            href="/oauth2/authorization/google"
+            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+          >
+            Login com Google
+          </a>
           <FormularioLogin />
         </div>
       </div>
