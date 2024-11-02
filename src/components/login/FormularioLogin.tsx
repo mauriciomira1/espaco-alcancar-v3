@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 // Variáveis
 import config from "@/app/config/variables";
 import { Link } from "react-router-dom";
+import { FcGoogle } from "react-icons/fc";
 
 // Validação de formulário com Zod
 const createUserFormSchema = z.object({
@@ -195,7 +196,17 @@ const FormularioLogin: React.FC = () => {
           </button>
         </div>
       </div>
-      <p className="mt-3 cursor-default font-paragrafos text-sm font-semibold text-primaryColor">
+      <a
+        className="hover:border-gray-40000 flex w-full items-center justify-center gap-2 rounded border border-gray-300 bg-white py-2 font-text text-sm font-semibold duration-150 hover:bg-gray-200 active:bg-gray-300 mb-3"
+        href={`${config.apiBaseUrl}/oauth2/authorization/google`}
+      >
+        <span className="mr-2">
+          <FcGoogle size={24} />
+        </span>
+        Login com Google
+      </a>
+
+      <p className="mt-3 cursor-default font-paragrafos text-xs font-semibold text-primaryColor">
         Ainda não tem cadastro?
         <Link
           to="/cadastro"
