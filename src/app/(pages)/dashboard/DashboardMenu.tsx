@@ -1,5 +1,5 @@
 import React from "react";
-import { FaFileAlt, FaStar, FaUser, FaSignOutAlt } from "react-icons/fa";
+import { FaFileAlt, FaStar, FaSignOutAlt, FaUsers } from "react-icons/fa";
 import { HiOutlinePaperClip } from "react-icons/hi";
 import { Link } from "react-router-dom";
 
@@ -35,8 +35,8 @@ const DashboardMenu: React.FC<DashboardMenuProps> = ({ handleLogout }) => {
         to="/dashboard/profile"
         className="text-white items-center justify-center flex flex-col p-4 rounded bg-verde-escuro active:bg-verde-claro cursor-pointer duration-150"
       >
-        <FaUser size={36} />
-        <p className="text-xs mt-1">Meus Dados</p>
+        <FaUsers size={36} />
+        <p className="text-xs mt-1">Dados e Dependentes</p>
       </Link>
       <button
         className="text-white items-center justify-center flex flex-col p-4 rounded bg-gray-500 active:bg-gray-700 cursor-pointer duration-150"

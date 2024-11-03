@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaArrowLeft, FaCheck, FaPencilAlt } from "react-icons/fa";
 import config from "@/app/config/variables";
 import Notification from "./notification";
+import Childs from "./childs";
 
 type FormData = {
   name: string;
@@ -21,6 +22,18 @@ type FormData = {
     admin: boolean;
   };
 };
+
+interface UserDashboardResponse {
+  name: string;
+  email: string;
+  phone: string;
+  relationship: string;
+  address: {
+    address: string;
+    city: string;
+    complement: string;
+  };
+}
 
 const Profile: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
@@ -40,7 +53,8 @@ const Profile: React.FC = () => {
     },
   });
 
-  const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useState<UserDashboardResponse | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState<{ [key: string]: boolean }>({});
   const [notification, setNotification] = useState<{
     visible: boolean;
@@ -49,6 +63,7 @@ const Profile: React.FC = () => {
   }>({ visible: false, message: "", type: "success" });
 
   const navigate = useNavigate();
+  const token = localStorage.getItem("espaco-alcancar");
 
   const relationshipOptions = {
     FATHER: "Pai",
@@ -72,48 +87,50 @@ const Profile: React.FC = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const token = localStorage.getItem("espaco-alcancar");
-        const response = await fetch(`${config.apiBaseUrl}/user/me`, {
+        if (!token) {
+          console.error("Token não encontrado");
+          setError("Token não encontrado");
+          navigate("/login");
+          return;
+        }
+
+        const userResponse = await fetch(`${config.apiBaseUrl}/user/me`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
 
-        if (response.status !== 200) {
+        if (userResponse.status !== 200) {
           navigate("/login");
           return;
         }
 
-        const data = await response.json();
-        setUserData(data);
+        const userData = await userResponse.json();
+        setUserData(userData);
         setFormData({
-          name: data.name || "",
-          email: data.email || "",
-          phone: data.phone || "",
-          relationship: data.relationship || "",
+          name: userData.name || "",
+          email: userData.email || "",
+          phone: userData.phone || "",
+          relationship: userData.relationship || "",
           address: {
-            address: data.address?.address || "",
-            city: data.address?.city || "",
-            complement: data.address?.complement || "",
+            address: userData.address?.address || "",
+            city: userData.address?.city || "",
+            complement: userData.address?.complement || "",
           },
           profileType: {
-            patient: data.profileType?.patient || false,
-            professional: data.profileType?.professional || false,
-            admin: data.profileType?.admin || false,
+            patient: userData.profileType?.patient || false,
+            professional: userData.profileType?.professional || false,
+            admin: userData.profileType?.admin || false,
           },
         });
       } catch (error) {
-        console.error("Error fetching user data:", error);
-        setNotification({
-          visible: true,
-          message: `Erro ao buscar dados do usuário. Tente novamente mais tarde.`,
-          type: "error",
-        });
+        console.error("Erro ao buscar dados do usuário:", error);
+        setError("Failed to fetch user data: " + (error as Error).message);
       }
     };
 
     fetchUserData();
-  }, [navigate]);
+  }, [token, navigate]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -432,6 +449,7 @@ const Profile: React.FC = () => {
           type={notification.type}
         />
       )}
+      <Childs token={token!} />
     </div>
   );
 };
