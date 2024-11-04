@@ -18,6 +18,8 @@ const Childs: React.FC<ChildsProps> = ({ token }) => {
   const [error, setError] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState<{ [key: string]: boolean }>({});
   const [formData, setFormData] = useState<{ [key: string]: string }>({});
+  const [isFetch, setIsFetch] = useState<boolean>(false);
+  const sortedChildren = children.sort((a, b) => a.id - b.id);
 
   useEffect(() => {
     const fetchChildrenData = async () => {
@@ -46,9 +48,10 @@ const Childs: React.FC<ChildsProps> = ({ token }) => {
     };
 
     fetchChildrenData();
-  }, [token]);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  }, [token, isFetch]);
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -57,6 +60,19 @@ const Childs: React.FC<ChildsProps> = ({ token }) => {
   };
 
   const handleUpdate = async (childId: number, field: string) => {
+    const childIndex = children.findIndex((child) => child.id === childId);
+    if (childIndex === -1) {
+      console.error("Child not found");
+      return;
+    }
+
+    const updatedChildData = {
+      id: childId,
+      name: formData[`name-${childId}`] || children[childIndex].name,
+      birth: formData[`birth-${childId}`] || children[childIndex].birth,
+      gender: formData[`gender-${childId}`] || children[childIndex].gender,
+    };
+
     try {
       const response = await fetch(`${config.apiBaseUrl}/user/children/edit`, {
         method: "PUT",
@@ -64,14 +80,15 @@ const Childs: React.FC<ChildsProps> = ({ token }) => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          id: childId,
-          [field]: formData[field],
-        }),
+        body: JSON.stringify(updatedChildData),
       });
 
       if (!response.ok) {
         throw new Error("Failed to update child data");
+      }
+
+      if (response.ok) {
+        setIsFetch(!isFetch);
       }
 
       const updatedChild = await response.json();
@@ -112,8 +129,8 @@ const Childs: React.FC<ChildsProps> = ({ token }) => {
     <div>
       <h2>Dependentes</h2>
       {children.length > 0 ? (
-        <ul>
-          {children.map((child) => (
+        sortedChildren.map((child) => (
+          <ul key={child.id}>
             <li key={child.id}>
               <div className={divClassesName}>
                 <label
@@ -163,7 +180,7 @@ const Childs: React.FC<ChildsProps> = ({ token }) => {
                 <div className="flex space-x-2">
                   {isEditing[`${child.id}-birth`] ? (
                     <input
-                      type="text"
+                      type="date"
                       id={`birth-${child.id}`}
                       name={`birth-${child.id}`}
                       value={formData[`birth-${child.id}`] || child.birth}
@@ -200,16 +217,21 @@ const Childs: React.FC<ChildsProps> = ({ token }) => {
                 </label>
                 <div className="flex space-x-2">
                   {isEditing[`${child.id}-gender`] ? (
-                    <input
-                      type="text"
+                    <select
                       id={`gender-${child.id}`}
                       name={`gender-${child.id}`}
                       value={formData[`gender-${child.id}`] || child.gender}
                       onChange={handleChange}
                       className={inputClassesName}
-                    />
+                    >
+                      <option value="MALE">Masculino</option>
+                      <option value="FEMALE">Feminino</option>
+                      <option value="OTHER">Outro</option>
+                    </select>
                   ) : (
-                    <p className={paragraphClassesName}>{child.gender}</p>
+                    <p className={paragraphClassesName}>
+                      {child.gender == "FEMALE" ? "Feminino" : "Masculino"}
+                    </p>
                   )}
                   <button
                     type="button"
@@ -230,8 +252,8 @@ const Childs: React.FC<ChildsProps> = ({ token }) => {
                 </div>
               </div>
             </li>
-          ))}
-        </ul>
+          </ul>
+        ))
       ) : (
         <p>Sem dependentes cadastrados.</p>
       )}
