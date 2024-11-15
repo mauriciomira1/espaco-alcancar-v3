@@ -2,7 +2,6 @@
 import config from "@/app/config/variables";
 import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import DashboardMenu from "./DashboardMenu";
 
 // Interfaces para tipar a resposta
 interface Address {
@@ -107,7 +106,6 @@ const Dashboard = () => {
       </p>
       {/* <p>Meu email é: {user.email}</p> */}
       <Outlet />
-      <DashboardMenu handleLogout={handleLogout} />
     </div>
   );
 };

@@ -33,8 +33,6 @@ const createUserFormSchema = z.object({
 type loginUserFormData = z.infer<typeof createUserFormSchema>;
 
 const FormularioLogin: React.FC = () => {
-  const router = useRouter();
-
   // register (usado para validar os inputs); handleSubmit (usado para enviar o Form); formState (usado para emitir a mensagem do erro)
   const {
     register,
@@ -52,8 +50,6 @@ const FormularioLogin: React.FC = () => {
 
   // Estado para controlar o estado de carregamento
   const [loading, setLoading] = useState(false);
-
-  const [roles, setRoles] = useState<string[]>([]);
 
   // Função que executa a requisição para o login
   const loginUser = async (data: loginUserFormData) => {
@@ -81,11 +77,16 @@ const FormularioLogin: React.FC = () => {
 
       const result = await response.json();
       const token = result.token;
-      setRoles(result.roles);
 
       localStorage.setItem("espaco-alcancar", token);
 
-      window.location.href = "/dashboard";
+      if (result.roles.includes("PROFESSIONAL")) {
+        window.location.href = "/professional-dashboard";
+      } else if (result.roles.includes("PATIENT")) {
+        window.location.href = "/dashboard";
+      } else if (result.roles.includes("ADMIN")) {
+        window.location.href = "/admin-dashboard";
+      }
     } catch (error) {
       console.error("Erro ao fazer login:", error);
       setErrorMessage("Erro ao fazer login. Tente novamente mais tarde.");
