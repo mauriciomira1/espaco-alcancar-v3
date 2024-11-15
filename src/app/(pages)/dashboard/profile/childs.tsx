@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FaPencilAlt, FaCheck } from "react-icons/fa";
+import { FaPencilAlt, FaCheck, FaTrash } from "react-icons/fa";
 import config from "@/app/config/variables";
 
 interface Child {
@@ -19,36 +19,131 @@ const Childs: React.FC<ChildsProps> = ({ token }) => {
   const [isEditing, setIsEditing] = useState<{ [key: string]: boolean }>({});
   const [formData, setFormData] = useState<{ [key: string]: string }>({});
   const [isFetch, setIsFetch] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [notification, setNotification] = useState<{
+    visible: boolean;
+    message: string;
+    type: "success" | "error";
+  }>({ visible: false, message: "", type: "success" });
+  const [newDependent, setNewDependent] = useState({
+    name: "",
+    birth: "",
+    gender: "FEMALE",
+  });
   const sortedChildren = children.sort((a, b) => a.id - b.id);
 
-  useEffect(() => {
-    const fetchChildrenData = async () => {
-      try {
-        const response = await fetch(
-          `${config.apiBaseUrl}/user/children/list`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+  const fetchChildrenData = async () => {
+    try {
+      const response = await fetch(`${config.apiBaseUrl}/user/children/list`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-        if (response.status !== 200) {
-          console.error("Erro ao buscar dependentes");
-          setError("Erro ao buscar dependentes");
-          return;
-        }
-
-        const childrenData = await response.json();
-        setChildren(childrenData);
-      } catch (error) {
-        console.error("Erro ao buscar dependentes:", error);
-        setError("Failed to fetch children data: " + (error as Error).message);
+      if (response.status !== 200) {
+        console.error("Erro ao buscar dependentes");
+        setError("Erro ao buscar dependentes");
+        return;
       }
-    };
 
+      const childrenData = await response.json();
+      setChildren(childrenData);
+    } catch (error) {
+      console.error("Erro ao buscar dependentes:", error);
+      setError("Failed to fetch children data: " + (error as Error).message);
+    }
+  };
+
+  useEffect(() => {
     fetchChildrenData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token, isFetch]);
+
+  const handleAddDependent = async () => {
+    try {
+      const response = await fetch(`${config.apiBaseUrl}/user/children/new`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(newDependent),
+      });
+
+      if (response.ok) {
+        setNotification({
+          visible: true,
+          message: "Dependente adicionado com sucesso!",
+          type: "success",
+        });
+        setIsModalOpen(false);
+        fetchChildrenData(); // Atualiza a lista de dependentes
+      } else {
+        setNotification({
+          visible: true,
+          message: "Erro ao adicionar dependente.",
+          type: "error",
+        });
+      }
+    } catch (error) {
+      setNotification({
+        visible: true,
+        message: "Erro ao adicionar dependente.",
+        type: "error",
+      });
+    }
+  };
+
+  const handleRemoveDependent = async (childId: number) => {
+    try {
+      const response = await fetch(
+        `${config.apiBaseUrl}/user/children/remove`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(childId),
+        }
+      );
+
+      if (response.ok) {
+        setNotification({
+          visible: true,
+          message: "Dependente removido com sucesso!",
+          type: "success",
+        });
+        fetchChildrenData(); // Atualiza a lista de dependentes
+      } else {
+        setNotification({
+          visible: true,
+          message: "Erro ao remover dependente.",
+          type: "error",
+        });
+      }
+    } catch (error) {
+      setNotification({
+        visible: true,
+        message: "Erro ao remover dependente.",
+        type: "error",
+      });
+    }
+  };
+
+  const handleDependentChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setNewDependent((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleCloseModal = (e: any) => {
+    if (e.target === e.currentTarget) {
+      setIsModalOpen(false);
+    }
+  };
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -126,137 +221,224 @@ const Childs: React.FC<ChildsProps> = ({ token }) => {
   const saveBtnClassesName = `bg-verde-escuro text-white h-6 font-paragrafos text-xs rounded-md px-2 py-0.5`;
 
   return (
-    <div>
-      <h2>Dependentes</h2>
-      {children.length > 0 ? (
-        sortedChildren.map((child) => (
-          <ul key={child.id}>
-            <li key={child.id}>
-              <div className={divClassesName}>
-                <label
-                  htmlFor={`name-${child.id}`}
-                  className={labelClassesName}
+    <div className="mt-7">
+      <h2 className="rounded-md px-2 py-1.5 bg-verde-claro text-white font-subtitulos">
+        Dependentes
+      </h2>
+      <div className="mt-1">
+        {children.length > 0 ? (
+          sortedChildren.map((child) => (
+            <ul key={child.id}>
+              <li
+                key={child.id}
+                className="relative rounded-md border-[1px] px-2 py-1 border-verde-claro mb-1.5"
+              >
+                <button
+                  type="button"
+                  onClick={() => handleRemoveDependent(child.id)}
+                  className="absolute top-2 right-2 text-red-500"
                 >
-                  Nome:
-                </label>
-                <div className="flex space-x-2">
-                  {isEditing[`${child.id}-name`] ? (
-                    <input
-                      type="text"
-                      id={`name-${child.id}`}
-                      name={`name-${child.id}`}
-                      value={formData[`name-${child.id}`] || child.name}
-                      onChange={handleChange}
-                      className={inputClassesName}
-                    />
-                  ) : (
-                    <p className={paragraphClassesName}>{child.name}</p>
-                  )}
-                  <button
-                    type="button"
-                    onClick={() => toggleEdit(child.id, "name")}
-                    className={pencilClassesName}
+                  <FaTrash />
+                </button>
+                <div className={divClassesName}>
+                  <label
+                    htmlFor={`name-${child.id}`}
+                    className={labelClassesName}
                   >
-                    <FaPencilAlt />
-                  </button>
-                  {isEditing[`${child.id}-name`] && (
+                    Nome:
+                  </label>
+                  <div className="flex space-x-2">
+                    {isEditing[`${child.id}-name`] ? (
+                      <input
+                        type="text"
+                        id={`name-${child.id}`}
+                        name={`name-${child.id}`}
+                        value={formData[`name-${child.id}`] || child.name}
+                        onChange={handleChange}
+                        className={inputClassesName}
+                      />
+                    ) : (
+                      <p className={paragraphClassesName}>{child.name}</p>
+                    )}
                     <button
                       type="button"
-                      onClick={() => handleUpdate(child.id, "name")}
-                      className={saveBtnClassesName}
+                      onClick={() => toggleEdit(child.id, "name")}
+                      className={pencilClassesName}
                     >
-                      <FaCheck />
+                      <FaPencilAlt />
                     </button>
-                  )}
+                    {isEditing[`${child.id}-name`] && (
+                      <button
+                        type="button"
+                        onClick={() => handleUpdate(child.id, "name")}
+                        className={saveBtnClassesName}
+                      >
+                        <FaCheck />
+                      </button>
+                    )}
+                  </div>
                 </div>
-              </div>
-              <div className={divClassesName}>
-                <label
-                  htmlFor={`birth-${child.id}`}
-                  className={labelClassesName}
-                >
-                  Data de Nascimento:
-                </label>
-                <div className="flex space-x-2">
-                  {isEditing[`${child.id}-birth`] ? (
-                    <input
-                      type="date"
-                      id={`birth-${child.id}`}
-                      name={`birth-${child.id}`}
-                      value={formData[`birth-${child.id}`] || child.birth}
-                      onChange={handleChange}
-                      className={inputClassesName}
-                    />
-                  ) : (
-                    <p className={paragraphClassesName}>{child.birth}</p>
-                  )}
-                  <button
-                    type="button"
-                    onClick={() => toggleEdit(child.id, "birth")}
-                    className={pencilClassesName}
+                <div className={divClassesName}>
+                  <label
+                    htmlFor={`birth-${child.id}`}
+                    className={labelClassesName}
                   >
-                    <FaPencilAlt />
-                  </button>
-                  {isEditing[`${child.id}-birth`] && (
+                    Data de Nascimento:
+                  </label>
+                  <div className="flex space-x-2">
+                    {isEditing[`${child.id}-birth`] ? (
+                      <input
+                        type="date"
+                        id={`birth-${child.id}`}
+                        name={`birth-${child.id}`}
+                        value={formData[`birth-${child.id}`] || child.birth}
+                        onChange={handleChange}
+                        className={inputClassesName}
+                      />
+                    ) : (
+                      <p className={paragraphClassesName}>{child.birth}</p>
+                    )}
                     <button
                       type="button"
-                      onClick={() => handleUpdate(child.id, "birth")}
-                      className={saveBtnClassesName}
+                      onClick={() => toggleEdit(child.id, "birth")}
+                      className={pencilClassesName}
                     >
-                      <FaCheck />
+                      <FaPencilAlt />
                     </button>
-                  )}
+                    {isEditing[`${child.id}-birth`] && (
+                      <button
+                        type="button"
+                        onClick={() => handleUpdate(child.id, "birth")}
+                        className={saveBtnClassesName}
+                      >
+                        <FaCheck />
+                      </button>
+                    )}
+                  </div>
                 </div>
-              </div>
-              <div className={divClassesName}>
-                <label
-                  htmlFor={`gender-${child.id}`}
-                  className={labelClassesName}
-                >
-                  Gênero:
-                </label>
-                <div className="flex space-x-2">
-                  {isEditing[`${child.id}-gender`] ? (
-                    <select
-                      id={`gender-${child.id}`}
-                      name={`gender-${child.id}`}
-                      value={formData[`gender-${child.id}`] || child.gender}
-                      onChange={handleChange}
-                      className={inputClassesName}
-                    >
-                      <option value="MALE">Masculino</option>
-                      <option value="FEMALE">Feminino</option>
-                      <option value="OTHER">Outro</option>
-                    </select>
-                  ) : (
-                    <p className={paragraphClassesName}>
-                      {child.gender == "FEMALE" ? "Feminino" : "Masculino"}
-                    </p>
-                  )}
-                  <button
-                    type="button"
-                    onClick={() => toggleEdit(child.id, "gender")}
-                    className={pencilClassesName}
+                <div className={divClassesName}>
+                  <label
+                    htmlFor={`gender-${child.id}`}
+                    className={labelClassesName}
                   >
-                    <FaPencilAlt />
-                  </button>
-                  {isEditing[`${child.id}-gender`] && (
+                    Gênero:
+                  </label>
+                  <div className="flex space-x-2">
+                    {isEditing[`${child.id}-gender`] ? (
+                      <select
+                        id={`gender-${child.id}`}
+                        name={`gender-${child.id}`}
+                        value={formData[`gender-${child.id}`] || child.gender}
+                        onChange={handleChange}
+                        className={inputClassesName}
+                      >
+                        <option value="MALE">Masculino</option>
+                        <option value="FEMALE">Feminino</option>
+                        <option value="OTHER">Outro</option>
+                      </select>
+                    ) : (
+                      <p className={paragraphClassesName}>
+                        {child.gender == "FEMALE" ? "Feminino" : "Masculino"}
+                      </p>
+                    )}
                     <button
                       type="button"
-                      onClick={() => handleUpdate(child.id, "gender")}
-                      className={saveBtnClassesName}
+                      onClick={() => toggleEdit(child.id, "gender")}
+                      className={pencilClassesName}
                     >
-                      <FaCheck />
+                      <FaPencilAlt />
                     </button>
-                  )}
+                    {isEditing[`${child.id}-gender`] && (
+                      <button
+                        type="button"
+                        onClick={() => handleUpdate(child.id, "gender")}
+                        className={saveBtnClassesName}
+                      >
+                        <FaCheck />
+                      </button>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </li>
-          </ul>
-        ))
-      ) : (
-        <p>Sem dependentes cadastrados.</p>
+              </li>
+            </ul>
+          ))
+        ) : (
+          <p>Sem dependentes cadastrados.</p>
+        )}
+      </div>
+      {isModalOpen && (
+        <div
+          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+          onClick={handleCloseModal}
+        >
+          <div className="bg-white w-full max-w-4xl p-6 rounded-md shadow-md shadow-slate-600 mx-5">
+            <h2 className="font-bold mb-6 text-center font-subtitulos rounded-md bg-verde-claro text-white py-2">
+              Adicionar Dependente
+            </h2>
+            <div className="mb-4 flex items-center gap-2 w-full">
+              <label className={labelClassesName} htmlFor="name">
+                Nome:
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={newDependent.name}
+                onChange={handleDependentChange}
+                className={inputClassesName}
+              />
+            </div>
+            <div className="mb-4 flex items-center gap-2 w-full">
+              <label className={labelClassesName} htmlFor="birth">
+                D. de Nasc.:
+              </label>
+              <input
+                type="date"
+                id="birth"
+                name="birth"
+                value={newDependent.birth}
+                onChange={handleDependentChange}
+                className={inputClassesName}
+              />
+            </div>
+            <div className="mb-4 flex items-center gap-2 w-full">
+              <label className={labelClassesName} htmlFor="gender">
+                Gênero:
+              </label>
+              <select
+                id="gender"
+                name="gender"
+                value={newDependent.gender}
+                onChange={handleDependentChange}
+                className={inputClassesName}
+              >
+                <option value="FEMALE">Feminino</option>
+                <option value="MALE">Masculino</option>
+              </select>
+            </div>
+            <div className="flex justify-end space-x-2 mt-4">
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="bg-gray-400 text-white px-4 py-2 rounded-md"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleAddDependent}
+                className="text-white px-4 py-2 rounded-md bg-verde-escuro"
+              >
+                Adicionar
+              </button>
+            </div>
+          </div>
+        </div>
       )}
+      <button
+        className="bg-pessego rounded-md px-2 mt-1 py-1 max-md:w-full text-white font-subtitulos"
+        onClick={() => setIsModalOpen(true)}
+      >
+        Adicionar Dependente
+      </button>
     </div>
   );
 };

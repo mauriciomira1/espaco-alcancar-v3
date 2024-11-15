@@ -200,9 +200,9 @@ const Profile: React.FC = () => {
     setIsEditing((prev) => ({ ...prev, [field]: !prev[field] }));
   };
 
-  const labelClassesName = `font-subtitulos text-sm`;
+  const labelClassesName = `font-subtitulos text-sm whitespace-nowrap`;
   const paragraphClassesName = `font-paragrafos pb-1 text-sm`;
-  const inputClassesName = `font-paragrafos text-sm bg-gray-200 rounded-md border-[1px] border-gray-400 px-2 py-0.5`;
+  const inputClassesName = `font-paragrafos text-sm bg-gray-200 rounded-md border-[1px] border-gray-400 px-2 py-0.5 w-full`;
   const divClassesName = `flex space-y-1 items-center gap-1`;
   const pencilClassesName = `text-gray-500 text-xs`;
   const saveBtnClassesName = `bg-verde-escuro text-white h-6 font-paragrafos text-xs rounded-md px-2 py-0.5`;
