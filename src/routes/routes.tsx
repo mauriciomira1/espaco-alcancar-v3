@@ -13,7 +13,7 @@ import Rate from "@/app/(pages)/dashboard/rate/page";
 import Profile from "@/app/(pages)/dashboard/profile/page";
 import Materials from "@/app/(pages)/dashboard/materials/page";
 import Fillout from "@/app/(pages)/dashboard/fillout/page";
-import ProfessionalLogin from "@/app/(pages)/login-professional/page";
+import ProfessionalLogin from "@/app/(pages)/app/page";
 
 const RoutesComponent = () => {
   return (
@@ -26,7 +26,7 @@ const RoutesComponent = () => {
         <Route path="/sobre" element={<Sobre />} />
         <Route path="/trabalhe-conosco" element={<TrabalheConosco />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/login-professional" element={<ProfessionalLogin />} />
+        <Route path="/app" element={<ProfessionalLogin />} />
         <Route path="/cadastro" element={<Cadastro />} />
         <Route
           path="/dashboard/*"
