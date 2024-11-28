@@ -95,8 +95,8 @@ const ProfessionalDashboard = () => {
 
   return (
     <div className="flex flex-col items-center bg-white h-screen">
-      <h1 className="font-destaque-gg text-destaque-gg pt-8 pb-2 text-verde-escuro">
-        Área do paciente
+      <h1 className="font-destaque-gg text-destaque-g pt-8 pb-2 text-verde-escuro">
+        Área do profissional
       </h1>
       <p className="font-titulos text-verde-claro pb-14">
         Bem vindo(a) {firstName}

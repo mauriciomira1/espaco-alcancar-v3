@@ -7,16 +7,14 @@ import ItemMenuModelo2 from "./itemMenuModelo2";
 import { Link, useLocation } from "react-router-dom";
 
 const MenuLaptop = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const location = useLocation();
+  const [isProfessionalLoggedIn, setIsProfessionalLoggedIn] = useState(false);
 
   useEffect(() => {
-    // Simulação de verificação de autenticação
-    const token = localStorage.getItem("espaco-alcancar"); // ou qualquer outra lógica para verificar se o usuário está logado
+    const token = localStorage.getItem("professional-espaco-alcancar");
     if (token) {
-      setIsLoggedIn(true);
+      setIsProfessionalLoggedIn(true);
     } else {
-      setIsLoggedIn(false);
+      setIsProfessionalLoggedIn(false);
     }
   }, []);
 
@@ -39,15 +37,11 @@ const MenuLaptop = () => {
           <ItemMenu to="/servicos" name="Serviços" />
           <ItemMenu to="/sobre" name="Sobre nós" />
           <ItemMenu to="/trabalhe-conosco" name="Trabalhe conosco" />
-          <ItemMenuModelo2 to="/dashboard" name="Meu Painel" />
-          {/* {isLoggedIn && location.pathname !== "/dashboard" && (
+          {isProfessionalLoggedIn ? (
+            <ItemMenuModelo2 to="/professional-dashboard" name="Acessar" />
+          ) : (
+            <ItemMenuModelo2 to="/login" name="Acessar" />
           )}
-          {!isLoggedIn && (
-            <>
-              <ItemMenuModelo2 to="/login" name="Entrar" />
-              <ItemMenuModelo2 to="/cadastro" name="Cadastrar" />
-            </>
-          )} */}
           <BtnMarcarAgora href="https://wa.me/5561994250846" />
         </ul>
       </div>

@@ -107,14 +107,14 @@ const FormProfessionalLogin: React.FC = () => {
         <input
           id="email"
           type="email"
-          className="text-sm border-gray-300 focus:outline-blue-600 px-1.5 contrast-more:border-primaryColor w-full h-8 bg-white border rounded hover:bg-gray-100 hover:border-gray-400 duration-150"
+          className="text-sm focus:outline-blue-600 px-1.5 contrast-more:border-primaryColor w-full h-8 bg-white rounded hover:bg-gray-100 hover:border-gray-400 duration-150"
           {...register("email")}
         />
         {errors.email && (
           <span className={styles.errorMessage}>{errors.email.message}</span>
         )}
         {errorMessage && (
-          <div className="mb-1 text-red-500 font-semibold text-sm">
+          <div className="mb-1 text-red-700 font-semibold text-sm">
             {errorMessage}
           </div>
         )}
@@ -131,7 +131,7 @@ const FormProfessionalLogin: React.FC = () => {
           id="password"
           type={showPassword ? "text" : "password"}
           autoComplete="on"
-          className="text-sm border-gray-300 focus:outline-blue-600 px-1.5 contrast-more:border-primaryColor w-full h-8 bg-white border rounded hover:bg-gray-100 hover:border-gray-400 duration-150"
+          className="text-sm focus:outline-blue-600 px-1.5 contrast-more:border-primaryColor w-full h-8 bg-white rounded hover:bg-gray-100 hover:border-gray-400 duration-150"
           {...register("password")}
         />
         {errors.password && (
@@ -188,7 +188,7 @@ const FormProfessionalLogin: React.FC = () => {
       </div>
       <Link
         to="/login"
-        className="border-verde-claro bg-gray-100 px-3 py-2 rounded-md border mt-7 font-bold text-secondaryColor font-titulos text-verde-claro hover:text-verde-escuro hover:border-verde-escuro"
+        className="border-verde-claro bg-gray-100 px-3 py-1.5 rounded-md border mt-4 text-sm text-secondaryColor font-subtitulos text-verde-claro hover:text-verde-escuro"
       >
         Voltar para Login de Pacientes
       </Link>

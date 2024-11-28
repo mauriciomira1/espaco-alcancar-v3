@@ -3,10 +3,13 @@
 import { IoIosClose } from "react-icons/io";
 import BtnMarcarAgora from "../MenuLaptop/btnMarcarAgora";
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { CiUser } from "react-icons/ci";
+import { FaRegCircleUser } from "react-icons/fa6";
 
 const WindowMenu = ({ handleClose }: { handleClose: () => void }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isProfessionalLoggedIn, setIsProfessionalLoggedIn] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("espaco-alcancar");
@@ -14,6 +17,15 @@ const WindowMenu = ({ handleClose }: { handleClose: () => void }) => {
       setIsLoggedIn(true);
     } else {
       setIsLoggedIn(false);
+    }
+
+    const tokenProfessional = localStorage.getItem(
+      "professional-espaco-alcancar"
+    );
+    if (tokenProfessional) {
+      setIsProfessionalLoggedIn(true);
+    } else {
+      setIsProfessionalLoggedIn(false);
     }
   }, []);
 
@@ -43,13 +55,25 @@ const WindowMenu = ({ handleClose }: { handleClose: () => void }) => {
       <Link className={linksClass} to="/trabalhe-conosco" onClick={handleClose}>
         Trabalhe Conosco
       </Link>
-      <Link
-        className="text-white bg-verde-escuro uppercase py-3 w-4/5 font-subtitulos text-center mb-6"
-        to="/dashboard"
-        onClick={handleClose}
-      >
-        Meu Painel
-      </Link>
+      {isProfessionalLoggedIn ? (
+        <Link
+          className="text-white bg-verde-escuro uppercase py-3 w-4/5 font-subtitulos text-center mb-6 flex items-center justify-center"
+          to="/professional-dashboard"
+          onClick={handleClose}
+        >
+          <FaRegCircleUser size={18} className="mr-2" />
+          Acessar
+        </Link>
+      ) : (
+        <Link
+          className="text-white bg-verde-escuro uppercase py-3 w-4/5 font-subtitulos text-center mb-6 flex items-center justify-center"
+          to="/dashboard"
+          onClick={handleClose}
+        >
+          <FaRegCircleUser size={18} className="mr-2" />
+          Acessar
+        </Link>
+      )}
       <BtnMarcarAgora href="https://wa.me/5561994250846" />
     </>
   );
