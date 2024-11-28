@@ -48,7 +48,7 @@ const WindowMenu = ({ handleClose }: { handleClose: () => void }) => {
         to="/dashboard"
         onClick={handleClose}
       >
-        Área do Usuário
+        Login
       </Link>
       <BtnMarcarAgora href="https://wa.me/5561994250846" />
     </>

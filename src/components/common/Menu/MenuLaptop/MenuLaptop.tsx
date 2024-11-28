@@ -39,7 +39,7 @@ const MenuLaptop = () => {
           <ItemMenu to="/servicos" name="Serviços" />
           <ItemMenu to="/sobre" name="Sobre nós" />
           <ItemMenu to="/trabalhe-conosco" name="Trabalhe conosco" />
-          <ItemMenuModelo2 to="/dashboard" name="Área do Paciente" />
+          <ItemMenuModelo2 to="/dashboard" name="Login" />
           {/* {isLoggedIn && location.pathname !== "/dashboard" && (
           )}
           {!isLoggedIn && (

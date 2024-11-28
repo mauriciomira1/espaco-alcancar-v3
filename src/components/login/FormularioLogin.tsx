@@ -216,6 +216,13 @@ const FormularioLogin: React.FC = () => {
           Cadastre-se aqui.
         </Link>
       </p>
+
+      <Link
+        to="/login-profissional"
+        className="border-verde-claro bg-gray-100 px-3 py-2 rounded-md border mt-7 font-bold text-secondaryColor font-titulos text-verde-claro hover:text-orange-800"
+      >
+        Área do profissional
+      </Link>
     </form>
   );
 };
