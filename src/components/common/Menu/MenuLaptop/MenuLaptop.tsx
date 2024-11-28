@@ -27,7 +27,7 @@ const MenuLaptop = () => {
           <Image
             src={logoCompacto}
             alt="Logotipo Espaço Alcançar"
-            width={120}
+            width={100}
             priority
           />
         </Link>
@@ -39,7 +39,7 @@ const MenuLaptop = () => {
           <ItemMenu to="/servicos" name="Serviços" />
           <ItemMenu to="/sobre" name="Sobre nós" />
           <ItemMenu to="/trabalhe-conosco" name="Trabalhe conosco" />
-          <ItemMenuModelo2 to="/dashboard" name="Login" />
+          <ItemMenuModelo2 to="/dashboard" name="Meu Painel" />
           {/* {isLoggedIn && location.pathname !== "/dashboard" && (
           )}
           {!isLoggedIn && (

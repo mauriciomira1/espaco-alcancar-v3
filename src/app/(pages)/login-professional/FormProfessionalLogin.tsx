@@ -86,14 +86,14 @@ const FormProfessionalLogin: React.FC = () => {
 
   return (
     <form
-      className="flex w-11/12 max-w-7xl flex-col items-center justify-center rounded-xl bg-white px-10 py-8 max-sm:px-8 md:w-[26rem] max-sm:w-11/12"
+      className="flex w-11/12 max-w-7xl flex-col items-center justify-center rounded-xl bg-verde-claro px-10 py-8 max-sm:px-8 md:w-[26rem] max-sm:w-11/12"
       onSubmit={handleSubmit(loginProfessional)}
     >
       <h2 className="font-titulos text-xl font-bold text-gray-900">
         Bem-vindo
       </h2>
 
-      <p className="mb-5 font-titulos text-xs font-semibold text-verde-claro text-center">
+      <p className="mb-5 font-titulos text-xs font-semibold text-white text-center">
         Faça login para ter acesso aos recursos para profissionais.
       </p>
 
@@ -154,7 +154,7 @@ const FormProfessionalLogin: React.FC = () => {
         <div className="flex items-start w-full my-2">
           <button
             type="submit"
-            className="mt-4 w-full h-10 bg-verde-claro text-white font-bold rounded disabled:opacity-50"
+            className="mt-4 w-full h-10 bg-verde-escuro text-white font-bold rounded disabled:opacity-50"
             disabled={loading}
           >
             {loading ? (

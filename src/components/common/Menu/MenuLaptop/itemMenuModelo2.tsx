@@ -7,7 +7,7 @@ interface ItemMenuProps {
 
 const ItemMenu = ({ to, name }: ItemMenuProps) => {
   return (
-    <li className="h-8 ms-1.5 px-3 rounded-md text-sm border-verde-claro border hover:border-verde-escuro hover:bg-verde-escuro hover:text-white font-subtitulos flex items-center justify-center gap-1 text-verde-escuro bg-transparent hover:cursor-pointer duration-100">
+    <li className="h-8 ms-1.5 px-3 rounded-md text-sm hover:border-verde-claro border hover:bg-white border-verde-escuro bg-verde-escuro text-white font-subtitulos flex items-center justify-center gap-1 hover:text-verde-escuro bg-transparent hover:cursor-pointer duration-100">
       <Link to={to} className="py-6 uppercase">
         {name}
       </Link>

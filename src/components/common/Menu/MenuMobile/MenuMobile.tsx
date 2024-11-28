@@ -44,14 +44,14 @@ const MenuMobile = () => {
           <HiMenu />
         </span>
         <Link to="/">
-          <Image src={logo} alt="Logotipo Espaço Alcançar" width={130} />
+          <Image src={logo} alt="Logotipo Espaço Alcançar" width={100} />
         </Link>
         <Link
           to="https://wa.me/5561994250846"
           target="_blank"
           className="text-green-900 text-4xl hover:text-green-600 active:text-green-500 duration-150"
         >
-          <BsWhatsapp />
+          <BsWhatsapp size={30} />
         </Link>
       </nav>
     </div>
