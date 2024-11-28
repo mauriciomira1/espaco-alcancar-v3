@@ -4,6 +4,7 @@ import { FaArrowLeft } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import NossasRedesSociais from "@/components/common/NossasRedesSociais/NossasRedesSociais";
 import FooterResponsive from "@/components/common/Footer/FooterResponsive";
+import FormProfessionalLogin from "./FormProfessionalLogin";
 
 const ProfessionalLogin = () => {
   return (
@@ -16,6 +17,7 @@ const ProfessionalLogin = () => {
               Voltar para Página inicial
             </div>
           </Link>
+          <FormProfessionalLogin />
         </div>
       </div>
       <NossasRedesSociais />

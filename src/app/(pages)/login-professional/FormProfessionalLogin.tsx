@@ -1,4 +1,3 @@
-// Bibliotecas instaladas: zod @hookform/resolvers react-hook-form
 "use client";
 
 // CSS
@@ -16,7 +15,6 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 // Variáveis
 import config from "@/app/config/variables";
 import { Link } from "react-router-dom";
-import { FcGoogle } from "react-icons/fc";
 
 // Validação de formulário com Zod
 const createUserFormSchema = z.object({
@@ -29,15 +27,15 @@ const createUserFormSchema = z.object({
 });
 
 // Criando um typeof para evitar o erro em 'errors' dentro do return
-type loginUserFormData = z.infer<typeof createUserFormSchema>;
+type loginProfessionalFormData = z.infer<typeof createUserFormSchema>;
 
-const FormularioLogin: React.FC = () => {
+const FormProfessionalLogin: React.FC = () => {
   // register (usado para validar os inputs); handleSubmit (usado para enviar o Form); formState (usado para emitir a mensagem do erro)
   const {
     register,
     handleSubmit,
     formState: { errors }, //desestruturando 'errors' para inseri-los na tela em um <span>
-  } = useForm<loginUserFormData>({
+  } = useForm<loginProfessionalFormData>({
     resolver: zodResolver(createUserFormSchema),
   });
 
@@ -51,10 +49,10 @@ const FormularioLogin: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   // Função que executa a requisição para o login
-  const loginUser = async (data: loginUserFormData) => {
+  const loginProfessional = async (data: loginProfessionalFormData) => {
     setLoading(true);
     try {
-      const response = await fetch(`${config.apiBaseUrl}/auth`, {
+      const response = await fetch(`${config.apiBaseUrl}/auth/professional`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -75,15 +73,9 @@ const FormularioLogin: React.FC = () => {
       }
 
       const result = await response.json();
-      localStorage.setItem("espaco-alcancar", result.token);
 
-      /*       if (result.roles.includes("PROFESSIONAL")) {
-        window.location.href = "/professional-dashboard";
-      } else if (result.roles.includes("PATIENT")) { */
-      window.location.href = "/dashboard";
-      /*       } else if (result.roles.includes("ADMIN")) {
-        window.location.href = "/admin-dashboard";
-      } */
+      localStorage.setItem("professional-espaco-alcancar", result.token);
+      window.location.href = "/professional-dashboard";
     } catch (error) {
       console.error("Erro ao fazer login:", error);
       setErrorMessage("Erro ao fazer login. Tente novamente mais tarde.");
@@ -95,14 +87,14 @@ const FormularioLogin: React.FC = () => {
   return (
     <form
       className="flex w-11/12 max-w-7xl flex-col items-center justify-center rounded-xl bg-white px-10 py-8 max-sm:px-8 md:w-[26rem] max-sm:w-11/12"
-      onSubmit={handleSubmit(loginUser)}
+      onSubmit={handleSubmit(loginProfessional)}
     >
       <h2 className="font-titulos text-xl font-bold text-gray-900">
         Bem-vindo
       </h2>
 
-      <p className="mb-5 font-titulos text-xs font-semibold text-verde-claro">
-        Faça login para ter acesso aos recursos para pacientes.
+      <p className="mb-5 font-titulos text-xs font-semibold text-verde-claro text-center">
+        Faça login para ter acesso aos recursos para profissionais.
       </p>
 
       <div className="flex flex-col my-1.5 w-full">
@@ -194,34 +186,13 @@ const FormularioLogin: React.FC = () => {
           </button>
         </div>
       </div>
-      <a
-        className="hover:border-gray-40000 flex w-full items-center justify-center gap-2 rounded border border-gray-300 bg-white py-2 font-text text-sm font-semibold duration-150 hover:bg-gray-200 active:bg-gray-300 mb-3"
-        href={`${config.apiBaseUrl}/oauth2/authorization/google`}
-      >
-        <span className="mr-2">
-          <FcGoogle size={24} />
-        </span>
-        Login com Google
-      </a>
-
-      <p className="mt-3 cursor-default font-paragrafos text-xs font-semibold text-primaryColor">
-        Ainda não tem cadastro?
-        <Link
-          to="/cadastro"
-          className="ml-1 font-bold text-secondaryColor text-verde-claro hover:text-orange-800"
-        >
-          Cadastre-se aqui.
-        </Link>
-      </p>
-
       <Link
-        to="/login-professional"
+        to="/login"
         className="border-verde-claro bg-gray-100 px-3 py-2 rounded-md border mt-7 font-bold text-secondaryColor font-titulos text-verde-claro hover:text-verde-escuro hover:border-verde-escuro"
       >
-        Área do profissional
+        Voltar para Login de Pacientes
       </Link>
     </form>
   );
 };
-
-export default FormularioLogin;
+export default FormProfessionalLogin;

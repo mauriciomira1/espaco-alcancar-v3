@@ -3,12 +3,7 @@ import config from "@/app/config/variables";
 import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 
-// Interfaces para tipar a resposta
-interface Address {
-  address: string;
-  city: string;
-  complement: string;
-}
+// Interface para a resposta
 
 interface ProfileType {
   patient: boolean;
@@ -16,21 +11,23 @@ interface ProfileType {
   admin: boolean;
 }
 
-interface UserDashboardResponse {
+interface ProfessionalDashboardResponse {
   id: number;
   name: string;
   phone: string;
   email: string;
-  children: any[]; // Definir uma interface específica para os filhos, se necessário
-  gender: "MALE" | "FEMALE";
-  address: Address;
+  password: string;
+  active: boolean;
+  birth: string;
+  registerNumber: string;
+  occupation: string;
   profileType: ProfileType;
 }
 
-const Dashboard = () => {
-  const [user, setUser] = useState<UserDashboardResponse | null>(null);
+const ProfessionalDashboard = () => {
+  const [user, setUser] = useState<ProfessionalDashboardResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const token = localStorage.getItem("espaco-alcancar");
+  const token = localStorage.getItem("professional-espaco-alcancar");
 
   const navigate = useNavigate();
 
@@ -39,12 +36,12 @@ const Dashboard = () => {
       if (!token) {
         console.error("Token not found");
         setError("Token not found");
-        navigate("/login");
+        navigate("/login-professional");
         return;
       }
 
       try {
-        const response = await fetch(`${config.apiBaseUrl}/user/me`, {
+        const response = await fetch(`${config.apiBaseUrl}/professional/me`, {
           method: "GET",
           headers: {
             Authorization: "Bearer " + token,
@@ -53,7 +50,7 @@ const Dashboard = () => {
         });
 
         if (response.status !== 200) {
-          navigate("/login");
+          navigate("/login-professional");
           console.error("Token inválido");
           setError("Token inválido");
           return;
@@ -66,11 +63,11 @@ const Dashboard = () => {
           return;
         }
 
-        const data: UserDashboardResponse = await response.json();
+        const data: ProfessionalDashboardResponse = await response.json();
         setUser(data);
 
-        // Verificando se o usuário possi a role "PATIENT" para poder acessar essa página
-        if (!data.profileType.patient) {
+        // Verificando se o usuário possi a role "PROFESSIONAL" para poder acessar essa página
+        if (!data.profileType.professional) {
           navigate("/login");
         }
       } catch (error) {
@@ -104,10 +101,10 @@ const Dashboard = () => {
       <p className="font-titulos text-verde-claro pb-14">
         Bem vindo(a) {firstName}
       </p>
-      {/* <p>Meu email é: {user.email}</p> */}
+      <p>Meu email é: {user.email}</p>
       <Outlet />
     </div>
   );
 };
 
-export default Dashboard;
+export default ProfessionalDashboard;

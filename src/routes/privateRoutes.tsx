@@ -6,7 +6,10 @@ interface PrivateRoutesProps {
 }
 
 const PrivateRoutes: FC<PrivateRoutesProps> = ({ Component }) => {
-  const session = localStorage.getItem("espaco-alcancar") || "null";
+  const session =
+    localStorage.getItem("espaco-alcancar") ||
+    localStorage.getItem("professional-espaco-alcancar") ||
+    "null";
 
   return session && session !== "null" ? (
     <Component />
