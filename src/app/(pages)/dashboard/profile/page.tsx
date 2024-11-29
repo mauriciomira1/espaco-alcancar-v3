@@ -88,13 +88,13 @@ const Profile: React.FC = () => {
     const fetchUserData = async () => {
       try {
         if (!token) {
-          console.error("Token não encontrado");
           setError("Token não encontrado");
           navigate("/login");
           return;
         }
 
         const userResponse = await fetch(`${config.apiBaseUrl}/user/me`, {
+          method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
           },

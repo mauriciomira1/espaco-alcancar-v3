@@ -38,7 +38,7 @@ const MenuLaptop = () => {
           <ItemMenu to="/sobre" name="Sobre nós" />
           <ItemMenu to="/trabalhe-conosco" name="Trabalhe conosco" />
           {isProfessionalLoggedIn ? (
-            <ItemMenuModelo2 to="/professional-dashboard" name="Acessar" />
+            <ItemMenuModelo2 to="/professional/dashboard" name="Acessar" />
           ) : (
             <ItemMenuModelo2 to="/login" name="Acessar" />
           )}

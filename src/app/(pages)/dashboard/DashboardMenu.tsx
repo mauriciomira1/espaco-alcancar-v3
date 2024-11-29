@@ -10,40 +10,30 @@ interface DashboardMenuProps {
 
 const DashboardMenu: React.FC<DashboardMenuProps> = ({ handleLogout }) => {
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5 gap-8 justify-center">
-      {/*       <Link
-        to="/dashboard/fillout"
-        className="text-white items-center justify-center flex flex-col p-4 rounded bg-verde-escuro active:bg-verde-claro cursor-pointer duration-150"
-      >
-        <FaFileAlt size={36} />
-        <p className="text-xs mt-1.5">Preenchimento</p>
-      </Link> */}
+    <nav className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5 gap-8 justify-center">
       <DashboardItem01
         icon={<FaFileAlt size={36} />}
         text="Preenchimento"
         urlTo="/dashboard/fillout"
       />
-      <Link
-        to="/dashboard/materials"
-        className="text-white items-center justify-center flex flex-col p-4 rounded bg-verde-escuro active:bg-verde-claro cursor-pointer duration-150"
-      >
-        <HiOutlinePaperClip size={36} />
-        <p className="text-xs mt-1">Materiais</p>
-      </Link>
-      <Link
-        to="/dashboard/rate"
-        className="text-white items-center justify-center flex flex-col p-4 rounded bg-verde-escuro active:bg-verde-claro cursor-pointer duration-150"
-      >
-        <FaStar size={36} />
-        <p className="text-xs mt-1">Avalie-nos</p>
-      </Link>
-      <Link
-        to="/dashboard/profile"
-        className="text-white items-center justify-center flex flex-col p-4 rounded bg-verde-escuro active:bg-verde-claro cursor-pointer duration-150"
-      >
-        <FaUsers size={36} />
-        <p className="text-xs mt-1">Dados e Dependentes</p>
-      </Link>
+
+      <DashboardItem01
+        icon={<HiOutlinePaperClip size={36} />}
+        text="Materiais"
+        urlTo="/dashboard/materials"
+      />
+
+      <DashboardItem01
+        icon={<FaStar size={36} />}
+        text="Avalie-nos"
+        urlTo="/dashboard/rate"
+      />
+
+      <DashboardItem01
+        icon={<FaUsers size={36} />}
+        text="Dados e Dependentes"
+        urlTo="/dashboard/profile"
+      />
       <button
         className="text-white items-center justify-center flex flex-col p-4 rounded bg-gray-500 active:bg-gray-700 cursor-pointer duration-150"
         onClick={handleLogout}
@@ -51,7 +41,7 @@ const DashboardMenu: React.FC<DashboardMenuProps> = ({ handleLogout }) => {
         <FaSignOutAlt size={36} />
         <p className="text-xs mt-1">Logout</p>
       </button>
-    </div>
+    </nav>
   );
 };
 

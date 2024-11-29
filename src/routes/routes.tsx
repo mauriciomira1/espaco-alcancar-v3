@@ -14,13 +14,16 @@ import Profile from "@/app/(pages)/dashboard/profile/page";
 import Materials from "@/app/(pages)/dashboard/materials/page";
 import Fillout from "@/app/(pages)/dashboard/fillout/page";
 import ProfessionalLogin from "@/app/(pages)/login-professional/page";
-import ProfessionalDashboard from "@/app/(pages)/professional-dashboard/page";
+import ProfessionalDashboardPage from "@/app/(pages)/professional/dashboard/page";
+import SensoryProfilePage from "@/app/(pages)/professional/sensory-profile/page";
+import ProfessionalProfilePage from "@/app/(pages)/professional/profile/page";
 
 const RoutesComponent = () => {
   return (
     <div>
       <MenuPrincipal />
       <Routes>
+        {/* Rotas públicas */}
         <Route path="/" element={<Home />} />
         <Route path="/nosso-espaco" element={<NossoEspaco />} />
         <Route path="/servicos" element={<Servicos />} />
@@ -29,13 +32,22 @@ const RoutesComponent = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/login-professional" element={<ProfessionalLogin />} />
         <Route path="/cadastro" element={<Cadastro />} />
+        {/* Rotas privadas */}
         <Route
           path="/dashboard/*"
           element={<PrivateRoutes Component={Dashboard} />}
         />
         <Route
-          path="/professional-dashboard"
-          element={<PrivateRoutes Component={ProfessionalDashboard} />}
+          path="/professional/dashboard"
+          element={<PrivateRoutes Component={ProfessionalDashboardPage} />}
+        />
+        <Route
+          path="/professional/profile"
+          element={<PrivateRoutes Component={ProfessionalProfilePage} />}
+        />
+        <Route
+          path="/professional/sensory-profile"
+          element={<PrivateRoutes Component={SensoryProfilePage} />}
         />
         <Route
           path="/dashboard/fillout"

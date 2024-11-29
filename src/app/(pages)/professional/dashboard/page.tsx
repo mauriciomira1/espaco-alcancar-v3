@@ -1,7 +1,10 @@
 "use client";
 import config from "@/app/config/variables";
+import DashboardItem01 from "@/components/common/Dashboard/DashboardItem01";
 import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
+import { IoNewspaperOutline } from "react-icons/io5";
+import DashboardProfessionalMenu from "./DashboardProfessionalMenu";
 
 // Interface para a resposta
 
@@ -24,7 +27,7 @@ interface ProfessionalDashboardResponse {
   profileType: ProfileType;
 }
 
-const ProfessionalDashboard = () => {
+const ProfessionalDashboardPage = () => {
   const [user, setUser] = useState<ProfessionalDashboardResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const token = localStorage.getItem("professional-espaco-alcancar");
@@ -91,20 +94,23 @@ const ProfessionalDashboard = () => {
     return <div>Carregando...</div>;
   }
 
-  const firstName = user.name.split(" ")[0];
-
   return (
     <div className="flex flex-col items-center bg-white h-screen">
       <h1 className="font-destaque-gg text-destaque-g pt-8 pb-2 text-verde-escuro">
         Área do profissional
       </h1>
-      <p className="font-titulos text-verde-claro pb-14">
-        Bem vindo(a) {firstName}
-      </p>
-      <p>Meu email é: {user.email}</p>
+      <div className="flex flex-col justify-center items-center pb-14">
+        <p className="font-titulos text-verde-claro">
+          Bem vindo(a) {user.name.split(" ")[0]}
+        </p>
+        <p className="text-xs font-citacao italic text-gray-500">
+          {user.occupation}
+        </p>
+      </div>
       <Outlet />
+      <DashboardProfessionalMenu />
     </div>
   );
 };
 
-export default ProfessionalDashboard;
+export default ProfessionalDashboardPage;

@@ -58,7 +58,7 @@ const WindowMenu = ({ handleClose }: { handleClose: () => void }) => {
       {isProfessionalLoggedIn ? (
         <Link
           className="text-white bg-verde-escuro uppercase py-3 w-4/5 font-subtitulos text-center mb-6 flex items-center justify-center"
-          to="/professional-dashboard"
+          to="/professional/dashboard"
           onClick={handleClose}
         >
           <FaRegCircleUser size={18} className="mr-2" />
