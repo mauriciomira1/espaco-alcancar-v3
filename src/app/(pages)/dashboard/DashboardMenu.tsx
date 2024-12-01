@@ -2,7 +2,6 @@ import DashboardItem01 from "@/components/common/Dashboard/DashboardItem01";
 import React from "react";
 import { FaFileAlt, FaStar, FaSignOutAlt, FaUsers } from "react-icons/fa";
 import { HiOutlinePaperClip } from "react-icons/hi";
-import { Link } from "react-router-dom";
 
 interface DashboardMenuProps {
   handleLogout: () => void;
@@ -13,29 +12,29 @@ const DashboardMenu: React.FC<DashboardMenuProps> = ({ handleLogout }) => {
     <nav className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5 gap-8 justify-center">
       <DashboardItem01
         icon={<FaFileAlt size={36} />}
-        text="Preenchimento"
+        title="Preenchimento"
         urlTo="/dashboard/fillout"
       />
 
       <DashboardItem01
         icon={<HiOutlinePaperClip size={36} />}
-        text="Materiais"
+        title="Materiais"
         urlTo="/dashboard/materials"
       />
 
       <DashboardItem01
         icon={<FaStar size={36} />}
-        text="Avalie-nos"
+        title="Avalie-nos"
         urlTo="/dashboard/rate"
       />
 
       <DashboardItem01
         icon={<FaUsers size={36} />}
-        text="Dados e Dependentes"
+        title="Dados e Dependentes"
         urlTo="/dashboard/profile"
       />
       <button
-        className="text-white items-center justify-center flex flex-col p-4 rounded bg-gray-500 active:bg-gray-700 cursor-pointer duration-150"
+        className="text-white items-center justify-center flex flex-col p-4 rounded bg-gray-400 active:bg-gray-700 cursor-pointer duration-150"
         onClick={handleLogout}
       >
         <FaSignOutAlt size={36} />

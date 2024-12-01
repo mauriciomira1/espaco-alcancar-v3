@@ -75,7 +75,7 @@ const FormProfessionalLogin: React.FC = () => {
       const result = await response.json();
 
       localStorage.setItem("professional-espaco-alcancar", result.token);
-      window.location.href = "/professional-dashboard";
+      window.location.href = "/professional/dashboard";
     } catch (error) {
       console.error("Erro ao fazer login:", error);
       setErrorMessage("Erro ao fazer login. Tente novamente mais tarde.");

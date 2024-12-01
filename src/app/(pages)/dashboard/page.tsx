@@ -72,7 +72,7 @@ const Dashboard = () => {
 
         // Verificando se o usuário possi a role "PATIENT" para poder acessar essa página
         if (!data.profileType.patient) {
-          navigate("/dashboard-professional");
+          navigate("/professional/dashboard");
         }
       } catch (error) {
         setError("Failed to fetch user data: " + (error as Error).message);

@@ -3,7 +3,6 @@ import config from "@/app/config/variables";
 import DashboardItem01 from "@/components/common/Dashboard/DashboardItem01";
 import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import { IoNewspaperOutline } from "react-icons/io5";
 import DashboardProfessionalMenu from "./DashboardProfessionalMenu";
 
 // Interface para a resposta
@@ -53,7 +52,7 @@ const ProfessionalDashboardPage = () => {
         });
 
         if (response.status !== 200) {
-          navigate("/login-professional");
+          navigate("/login");
           console.error("Token inválido");
           setError("Token inválido");
           return;
@@ -82,7 +81,7 @@ const ProfessionalDashboardPage = () => {
   }, [token, navigate]);
 
   const handleLogout = () => {
-    localStorage.removeItem("espaco-alcancar");
+    localStorage.removeItem("professional-espaco-alcancar");
     navigate(0);
   };
 
@@ -108,7 +107,7 @@ const ProfessionalDashboardPage = () => {
         </p>
       </div>
       <Outlet />
-      <DashboardProfessionalMenu />
+      <DashboardProfessionalMenu handleLogout={handleLogout} />
     </div>
   );
 };

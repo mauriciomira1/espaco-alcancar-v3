@@ -1,21 +1,35 @@
 import DashboardItem01 from "@/components/common/Dashboard/DashboardItem01";
 import React from "react";
+import { FaSignOutAlt, FaUsers } from "react-icons/fa";
 import { IoNewspaperOutline } from "react-icons/io5";
-import { Link } from "react-router-dom";
 
-const DashboardProfessionalMenu: React.FC = () => {
+interface DashboardMenuProps {
+  handleLogout: () => void;
+}
+
+const DashboardProfessionalMenu: React.FC<DashboardMenuProps> = ({
+  handleLogout,
+}) => {
   return (
-    <nav>
+    <nav className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5 gap-8 justify-center">
       <DashboardItem01
-        text="Perfil Sensorial"
+        title="Perfil Sensorial"
+        description="Disponibilize o perfil para seus pacientes preencherem"
         urlTo="/professional/sensory-profile"
         icon={<IoNewspaperOutline size={36} />}
       />
       <DashboardItem01
         icon={<FaUsers size={36} />}
-        text="Dados e Dependentes"
+        title="Dados e Dependentes"
         urlTo="/professional/profile"
       />
+      <button
+        className="text-white items-center justify-center flex flex-col p-4 rounded bg-gray-400 active:bg-gray-700 cursor-pointer duration-150"
+        onClick={handleLogout}
+      >
+        <FaSignOutAlt size={36} />
+        <p className="text-xs mt-1">Logout</p>
+      </button>
     </nav>
   );
 };
