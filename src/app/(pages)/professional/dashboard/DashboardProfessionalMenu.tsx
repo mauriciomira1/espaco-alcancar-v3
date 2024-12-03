@@ -1,6 +1,6 @@
 import DashboardItem01 from "@/components/common/Dashboard/DashboardItem01";
 import React from "react";
-import { FaSignOutAlt, FaUsers } from "react-icons/fa";
+import { FaRegUser, FaSignOutAlt, FaUsers } from "react-icons/fa";
 import { IoNewspaperOutline } from "react-icons/io5";
 
 interface DashboardMenuProps {
@@ -19,8 +19,8 @@ const DashboardProfessionalMenu: React.FC<DashboardMenuProps> = ({
         icon={<IoNewspaperOutline size={36} />}
       />
       <DashboardItem01
-        icon={<FaUsers size={36} />}
-        title="Dados e Dependentes"
+        icon={<FaRegUser size={32} />}
+        title="Meus Dados"
         urlTo="/professional/profile"
       />
       <button

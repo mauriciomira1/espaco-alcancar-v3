@@ -175,10 +175,16 @@ const ProfessionalProfilePage: React.FC = () => {
   const pencilClassesName = `text-gray-500 text-xs`;
   const saveBtnClassesName = `bg-verde-escuro text-white h-6 font-paragrafos text-xs rounded-md px-2 py-0.5`;
 
+  const formatDate = (dateString: string) => {
+    const [year, month, day] = dateString.split("-");
+    const date = new Date(Number(year), Number(month) - 1, Number(day));
+    return date.toLocaleDateString("pt-BR");
+  };
+
   return (
     <div className="w-full h-screen bg-white p-4">
       <Link
-        to="/dashboard"
+        to="/professional/dashboard"
         className="flex items-center justify-center bg-verde-escuro text-white mb-8 w-20 rounded-md p-1"
       >
         <FaArrowLeft className="mr-1" />
@@ -275,7 +281,9 @@ const ProfessionalProfilePage: React.FC = () => {
                 className={inputClassesName}
               />
             ) : (
-              <p className={paragraphClassesName}>{formData.birth}</p>
+              <p className={paragraphClassesName}>
+                {formatDate(formData.birth)}
+              </p>
             )}
             <button
               type="button"
