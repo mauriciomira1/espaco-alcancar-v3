@@ -22,7 +22,7 @@ const DashboardItem01: React.FC<DashboardItem01Props> = ({
       {icon}
       <h1 className="text-sm font-titulos mt-2">{title}</h1>
       {description && (
-        <p className="text-xs text-gray-500 italic text-center">
+        <p className="text-[0.65rem] text-gray-500 italic text-center">
           {description}
         </p>
       )}

@@ -94,17 +94,24 @@ const ProfessionalDashboardPage = () => {
   }
 
   return (
-    <div className="flex flex-col items-center bg-white h-screen">
+    <div className="flex flex-col items-center bg-white h-screen p-2">
       <h1 className="font-destaque-gg text-destaque-g pt-8 pb-2 text-verde-escuro">
         Área do profissional
       </h1>
-      <div className="flex flex-col justify-center items-center pb-14">
-        <p className="font-titulos text-verde-claro">
-          Bem vindo(a) {user.name.split(" ")[0]}
-        </p>
-        <p className="text-xs font-citacao italic text-gray-500">
-          {user.occupation}
-        </p>
+      <p className="font-titulos text-verde-claro">
+        Bem vindo(a) {user.name.split(" ")[0]}
+      </p>
+      <div className="flex justify-center items-center pb-14">
+        {user.occupation && (
+          <p className="text-xs font-citacao italic text-gray-500">
+            {user.occupation}
+          </p>
+        )}
+        {user.registerNumber && (
+          <p className="text-xs font-citacao italic text-gray-500">
+            &nbsp;- {user.registerNumber}
+          </p>
+        )}
       </div>
       <Outlet />
       <DashboardProfessionalMenu handleLogout={handleLogout} />

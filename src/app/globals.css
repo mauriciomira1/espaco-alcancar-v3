@@ -47,3 +47,9 @@
     url("../../public/common/estrelas.svg"),
     linear-gradient(180deg, #2D1C40, #30395A 73%, #39719A 100%);
 }
+
+@layer base {
+  :root {
+    --radius: 0.5rem;
+  }
+}
