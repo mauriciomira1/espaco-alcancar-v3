@@ -14,7 +14,6 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 // Variáveis
 import config from "@/app/config/variables";
-import { Link } from "react-router-dom";
 
 // Validação de formulário com Zod
 const createUserFormSchema = z.object({
@@ -186,12 +185,9 @@ const FormProfessionalLogin: React.FC = () => {
           </button>
         </div>
       </div>
-      <Link
-        to="/login"
-        className="border-verde-claro bg-gray-100 px-3 py-1.5 rounded-md border mt-4 text-sm text-secondaryColor font-subtitulos text-verde-claro hover:text-verde-escuro"
-      >
-        Voltar para Login de Pacientes
-      </Link>
+      <p className="text-white font-paragrafos text-xs mt-3">
+        Login exclusivo para profissionals do Espaço Alcançar
+      </p>
     </form>
   );
 };

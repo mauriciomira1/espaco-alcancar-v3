@@ -94,7 +94,7 @@ const FormularioLogin: React.FC = () => {
 
   return (
     <form
-      className="flex w-11/12 max-w-7xl flex-col items-center justify-center rounded-xl bg-white px-10 py-8 max-sm:px-8 md:w-[26rem] max-sm:w-11/12"
+      className="flex w-11/12 max-w-7xl md:w-[26rem] max-sm:w-11/12 flex-col items-center justify-center rounded-xl bg-white px-10 py-8 max-sm:px-8 "
       onSubmit={handleSubmit(loginUser)}
     >
       <h2 className="font-titulos text-xl font-bold text-gray-900">
@@ -213,13 +213,6 @@ const FormularioLogin: React.FC = () => {
           Cadastre-se aqui.
         </Link>
       </p>
-
-      <Link
-        to="/login-professional"
-        className="border-verde-claro bg-gray-100 px-3 py-2 rounded-md border mt-7 font-bold text-secondaryColor font-titulos text-verde-claro hover:text-verde-escuro hover:border-verde-escuro"
-      >
-        Área do profissional
-      </Link>
     </form>
   );
 };
