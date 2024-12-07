@@ -1,8 +1,7 @@
 "use client";
 import config from "@/app/config/variables";
-import DashboardItem01 from "@/components/common/Dashboard/DashboardItem01";
 import { useEffect, useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { useRouter } from "next/router";
 import DashboardProfessionalMenu from "./DashboardProfessionalMenu";
 
 // Interface para a resposta
@@ -31,14 +30,14 @@ const ProfessionalDashboardPage = () => {
   const [error, setError] = useState<string | null>(null);
   const token = localStorage.getItem("professional-espaco-alcancar");
 
-  const navigate = useNavigate();
+  const router = useRouter();
 
   useEffect(() => {
     const fetchUserData = async () => {
       if (!token) {
         console.error("Token not found");
         setError("Token not found");
-        navigate("/login-professional");
+        router.push("/login-professional");
         return;
       }
 
@@ -52,7 +51,7 @@ const ProfessionalDashboardPage = () => {
         });
 
         if (response.status !== 200) {
-          navigate("/login");
+          router.push("/login");
           console.error("Token inválido");
           setError("Token inválido");
           return;
@@ -70,7 +69,7 @@ const ProfessionalDashboardPage = () => {
 
         // Verificando se o usuário possi a role "PROFESSIONAL" para poder acessar essa página
         if (!data.profileType.professional) {
-          navigate("/login");
+          router.push("/login");
         }
       } catch (error) {
         setError("Failed to fetch user data: " + (error as Error).message);
@@ -78,11 +77,11 @@ const ProfessionalDashboardPage = () => {
     };
 
     fetchUserData();
-  }, [token, navigate]);
+  }, [token, router]);
 
   const handleLogout = () => {
     localStorage.removeItem("professional-espaco-alcancar");
-    navigate(0);
+    router.reload();
   };
 
   if (error) {
@@ -113,7 +112,7 @@ const ProfessionalDashboardPage = () => {
           </p>
         )}
       </div>
-      <Outlet />
+      {/* <Outlet /> */}
       <DashboardProfessionalMenu handleLogout={handleLogout} />
     </div>
   );

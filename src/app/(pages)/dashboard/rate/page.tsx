@@ -2,7 +2,7 @@
 import config from "@/app/config/variables"; // Importa a configuração de variáveis.
 import React, { useState, useEffect } from "react"; // Importa React e hooks.
 import { FaArrowLeft, FaCheck, FaTimesCircle } from "react-icons/fa"; // Importa ícones.
-import { Link } from "react-router-dom"; // Importa o componente Link do react-router-dom.
+import Link from "next/link"; // Importa o componente Link do Next.js.
 
 const Rate: React.FC = () => {
   const [rating, setRating] = useState(0); // Estado para a avaliação.
@@ -68,9 +68,11 @@ const Rate: React.FC = () => {
 
   return (
     <div className="w-full flex flex-col h-screen bg-white pt-12 items-center p-5">
-      <Link to="/dashboard" className="flex items-center text-verde-escuro p-4">
-        <FaArrowLeft className="mr-1" />
-        Voltar
+      <Link href="/dashboard">
+        <a className="flex items-center text-verde-escuro p-4">
+          <FaArrowLeft className="mr-1" />
+          Voltar
+        </a>
       </Link>
       <div className="bg-gray-200 p-6 mb-10 rounded-lg justify-center items-center shadow-md w-full max-w-md">
         {submitted ? (

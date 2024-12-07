@@ -3,9 +3,8 @@
 import { IoIosClose } from "react-icons/io";
 import BtnMarcarAgora from "../MenuLaptop/btnMarcarAgora";
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { CiUser } from "react-icons/ci";
 import { FaRegCircleUser } from "react-icons/fa6";
+import Link from "next/link";
 
 const WindowMenu = ({ handleClose }: { handleClose: () => void }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -40,25 +39,29 @@ const WindowMenu = ({ handleClose }: { handleClose: () => void }) => {
       >
         <IoIosClose />
       </button>
-      <Link className={`mt-4 ${linksClass}`} to="/" onClick={handleClose}>
+      <Link className={`mt-4 ${linksClass}`} href="/" onClick={handleClose}>
         Início
       </Link>
-      <Link className={linksClass} to="/nosso-espaco" onClick={handleClose}>
+      <Link className={linksClass} href="/nosso-espaco" onClick={handleClose}>
         Nosso espaço
       </Link>
-      <Link className={linksClass} to="/servicos" onClick={handleClose}>
+      <Link className={linksClass} href="/servicos" onClick={handleClose}>
         Serviços
       </Link>
-      <Link className={linksClass} to="/sobre" onClick={handleClose}>
+      <Link className={linksClass} href="/sobre" onClick={handleClose}>
         Sobre nós
       </Link>
-      <Link className={linksClass} to="/trabalhe-conosco" onClick={handleClose}>
+      <Link
+        className={linksClass}
+        href="/trabalhe-conosco"
+        onClick={handleClose}
+      >
         Trabalhe Conosco
       </Link>
       {isProfessionalLoggedIn ? (
         <Link
           className="text-white bg-verde-escuro uppercase py-3 w-4/5 font-subtitulos text-center mb-6 flex items-center justify-center"
-          to="/professional/dashboard"
+          href="/professional/dashboard"
           onClick={handleClose}
         >
           <FaRegCircleUser size={18} className="mr-2" />
@@ -67,7 +70,7 @@ const WindowMenu = ({ handleClose }: { handleClose: () => void }) => {
       ) : (
         <Link
           className="text-white bg-verde-escuro uppercase py-3 w-4/5 font-subtitulos text-center mb-6 flex items-center justify-center"
-          to="/dashboard"
+          href="/dashboard"
           onClick={handleClose}
         >
           <FaRegCircleUser size={18} className="mr-2" />

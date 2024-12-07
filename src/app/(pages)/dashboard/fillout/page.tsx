@@ -1,13 +1,13 @@
 "use client";
+import Link from "next/link";
 import React from "react";
 import { FaArrowLeft } from "react-icons/fa";
-import { Link } from "react-router-dom";
 
 const Fillout = () => {
   return (
     <div className="flex flex-col px-4 bg-white h-screen">
       <Link
-        to="/dashboard"
+        href="/dashboard"
         className="flex items-center justify-center bg-verde-escuro text-white mt-3 mb-8 w-20 rounded-md p-1"
       >
         <FaArrowLeft className="mr-1" />

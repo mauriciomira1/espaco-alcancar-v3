@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useRouter } from "next/router";
 import { FaArrowLeft, FaCheck, FaPencilAlt } from "react-icons/fa";
 import config from "@/app/config/variables";
 import Notification from "./notification";
@@ -62,7 +62,7 @@ const Profile: React.FC = () => {
     type: "success" | "error";
   }>({ visible: false, message: "", type: "success" });
 
-  const navigate = useNavigate();
+  const router = useRouter();
   const token = localStorage.getItem("espaco-alcancar");
 
   const relationshipOptions = {
@@ -89,7 +89,7 @@ const Profile: React.FC = () => {
       try {
         if (!token) {
           setError("Token não encontrado");
-          navigate("/login");
+          router.push("/login");
           return;
         }
 
@@ -101,7 +101,7 @@ const Profile: React.FC = () => {
         });
 
         if (userResponse.status !== 200) {
-          navigate("/login");
+          router.push("/login");
           return;
         }
 
@@ -130,7 +130,7 @@ const Profile: React.FC = () => {
     };
 
     fetchUserData();
-  }, [token, navigate]);
+  }, [token, router]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -209,13 +209,13 @@ const Profile: React.FC = () => {
 
   return (
     <div className="w-full h-screen bg-white p-4">
-      <Link
-        to="/dashboard"
+      <button
+        onClick={() => router.push("/dashboard")}
         className="flex items-center justify-center bg-verde-escuro text-white mb-8 w-20 rounded-md p-1"
       >
         <FaArrowLeft className="mr-1" />
         Voltar
-      </Link>
+      </button>
       <form className="space-y-2">
         <div className={divClassesName}>
           <label htmlFor="name" className={labelClassesName}>

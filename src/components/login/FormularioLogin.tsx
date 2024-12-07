@@ -15,8 +15,8 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 // Variáveis
 import config from "@/app/config/variables";
-import { Link } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
+import Link from "next/link";
 
 // Validação de formulário com Zod
 const createUserFormSchema = z.object({
@@ -207,7 +207,7 @@ const FormularioLogin: React.FC = () => {
       <p className="mt-3 cursor-default font-paragrafos text-xs font-semibold text-primaryColor">
         Ainda não tem cadastro?
         <Link
-          to="/cadastro"
+          href="/cadastro"
           className="ml-1 font-bold text-secondaryColor text-verde-claro hover:text-orange-800"
         >
           Cadastre-se aqui.

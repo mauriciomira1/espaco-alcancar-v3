@@ -2,7 +2,9 @@
 import config from "@/app/config/variables";
 import { useEffect, useState } from "react";
 import { FaArrowLeft } from "react-icons/fa";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { SensoryProfileResponseInterface } from "@/interfaces/SensoryProfileInterfaces";
 import {
   Command,
   CommandEmpty,
@@ -16,9 +18,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { ChildDefaultResponse } from "@/interfaces/ChildInterfaces";
-import { ProfessionalDashboardResponse } from "@/interfaces/ProfessionalInterfaces";
-import { SensoryProfileResponseInterface } from "@/interfaces/SensoryProfileInterfaces";
 
 interface FrameworksInterface {
   value: string;
@@ -26,28 +25,31 @@ interface FrameworksInterface {
 }
 
 const SensoryProfilePage = () => {
-  const [user, setUser] = useState<ProfessionalDashboardResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [sensoryProfiles, setSensoryProfiles] = useState<
     SensoryProfileResponseInterface[]
   >([]);
   const [frameworks, setFrameworks] = useState<FrameworksInterface[]>([]);
+  const [selectedProfile, setSelectedProfile] =
+    useState<SensoryProfileResponseInterface | null>(null);
+  const [open, setOpen] = useState(false);
+  const [inputValue, setInputValue] = useState("");
   const token = localStorage.getItem("professional-espaco-alcancar");
 
-  const navigate = useNavigate();
+  const router = useRouter();
 
   useEffect(() => {
     if (!token) {
       console.error("Token not found");
       setError("Token not found");
-      navigate("/login-professional");
+      router.push("/login-professional");
       return;
     }
 
     // Buscar todos Perfis Sensoriais criados pelo atual profissional
     const fetchUserData = async () => {
       try {
-        const sensoryProfiles = await fetch(
+        const response = await fetch(
           `${config.apiBaseUrl}/dashboard/sp/list-all-sensory-profiles-created`,
           {
             method: "GET",
@@ -58,13 +60,17 @@ const SensoryProfilePage = () => {
           }
         );
 
-        if (sensoryProfiles.ok) {
-          const sensoryProfilesData = await sensoryProfiles.json();
-          setSensoryProfiles(sensoryProfilesData);
-        } else {
-          setError(
-            "Failed to fetch patients data: " + sensoryProfiles.statusText
+        if (response.ok) {
+          const sensoryProfilesData: SensoryProfileResponseInterface[] =
+            await response.json();
+          // Remover duplicatas
+          const uniqueProfiles = sensoryProfilesData.filter(
+            (profile, index, self) =>
+              index === self.findIndex((p) => p.id === profile.id)
           );
+          setSensoryProfiles(uniqueProfiles);
+        } else {
+          setError("Failed to fetch patients data: " + response.statusText);
         }
       } catch (error) {
         setError("Failed to fetch user data: " + (error as Error).message);
@@ -72,7 +78,7 @@ const SensoryProfilePage = () => {
     };
 
     fetchUserData();
-  }, [token, navigate]);
+  }, [token, router]);
 
   useEffect(() => {
     setFrameworks(
@@ -83,43 +89,72 @@ const SensoryProfilePage = () => {
     );
   }, [sensoryProfiles]);
 
-  const handleLogout = () => {
-    localStorage.removeItem("espaco-alcancar");
-    navigate(0);
-  };
-
   if (error) {
     return <div>Error: {error}</div>;
   }
 
-  if (!user) {
-    return <div>Carregando...</div>;
-  }
-
-  const firstName = user.name.split(" ")[0];
-
   return (
-    <div className="flex w-full flex-col items-center bg-white h-screen">
+    <div className="flex w-full flex-col items-center px-2 bg-white h-screen">
       <h1 className="font-destaque-gg text-destaque-g pt-8 pb-2 text-verde-escuro">
         Área do profissional
       </h1>
-      <p className="font-titulos text-verde-claro pb-14">
-        Bem vindo(a) {firstName}
-      </p>
-      <Link
-        to="/professional/dashboard"
-        className="flex items-center justify-center bg-verde-escuro text-white mb-8 w-20 rounded-md p-1"
-      >
-        <FaArrowLeft className="mr-1" />
-        Voltar
-      </Link>
+      <div className="w-full">
+        <Link href="/professional/dashboard">
+          <a className="flex items-center text-sm justify-center bg-verde-escuro text-white mb-8 w-20 rounded-md p-1">
+            <FaArrowLeft className="mr-1" />
+            Voltar
+          </a>
+        </Link>
+      </div>
       <div className="text-verde-escuro items-center justify-center flex flex-col p-3 rounded border-verde-escuro border cursor-pointer duration-150">
         <h2 className="text-sm font-titulos">Meus perfis sensoriais</h2>
-
-        {/* <Link to={}>{}</Link> */}
+        <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger asChild>
+            <button className="w-full px-4 py-2 text-left bg-white border rounded-md">
+              {inputValue || "Selecione um perfil sensorial"}
+            </button>
+          </PopoverTrigger>
+          <PopoverContent className="w-full p-0">
+            <Command>
+              <CommandInput
+                placeholder="Buscar perfil sensorial..."
+                value={inputValue}
+                onValueChange={(value) => setInputValue(value)}
+              />
+              <CommandList>
+                <CommandEmpty>Nenhum perfil encontrado.</CommandEmpty>
+                <CommandGroup>
+                  {frameworks.map((framework) => (
+                    <CommandItem
+                      key={framework.value}
+                      onSelect={() => {
+                        const selected = sensoryProfiles.find(
+                          (sp) => sp.id === framework.value.split("/").pop()
+                        );
+                        setSelectedProfile(selected || null);
+                        setInputValue(framework.label);
+                        setOpen(false);
+                      }}
+                    >
+                      {framework.label}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
+        {selectedProfile && (
+          <div className="mt-4">
+            <p>{selectedProfile.resultsOfSensoryProfile}</p>
+            <Link href={`/professional/sensory-profile/${selectedProfile.id}`}>
+              <a className="text-blue-500 underline">Ver perfil completo</a>
+            </Link>
+          </div>
+        )}
       </div>
 
-      <Outlet />
+      {/* <Outlet /> */}
     </div>
   );
 };

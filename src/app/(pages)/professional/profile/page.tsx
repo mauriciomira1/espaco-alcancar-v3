@@ -1,9 +1,10 @@
 "use client";
 import config from "@/app/config/variables";
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useRouter } from "next/router";
 import Notification from "../../dashboard/profile/notification";
 import { FaArrowLeft, FaCheck, FaPencilAlt } from "react-icons/fa";
+import Link from "next/link";
 
 type FormData = {
   name: string;
@@ -52,7 +53,7 @@ const ProfessionalProfilePage: React.FC = () => {
     type: "success" | "error";
   }>({ visible: false, message: "", type: "success" });
 
-  const navigate = useNavigate();
+  const router = useRouter();
   const token = localStorage.getItem("professional-espaco-alcancar");
 
   const fieldLabels = {
@@ -69,7 +70,7 @@ const ProfessionalProfilePage: React.FC = () => {
       try {
         if (!token) {
           setError("Token não encontrado");
-          navigate("/login-professional");
+          router.push("/login-professional");
           return;
         }
 
@@ -81,7 +82,7 @@ const ProfessionalProfilePage: React.FC = () => {
         });
 
         if (response.status !== 200) {
-          navigate("/login-professional");
+          router.push("/login-professional");
           setError("Token inválido");
           return;
         }
@@ -110,8 +111,12 @@ const ProfessionalProfilePage: React.FC = () => {
       }
     };
 
-    fetchProfessionalData();
-  }, [token, navigate]);
+    if (token) {
+      fetchProfessionalData();
+    } else {
+      router.push("/login");
+    }
+  }, [token, router]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -184,7 +189,7 @@ const ProfessionalProfilePage: React.FC = () => {
   return (
     <div className="w-full h-screen bg-white p-4">
       <Link
-        to="/professional/dashboard"
+        href="/professional/dashboard"
         className="flex items-center justify-center bg-verde-escuro text-white mb-8 w-20 rounded-md p-1"
       >
         <FaArrowLeft className="mr-1" />

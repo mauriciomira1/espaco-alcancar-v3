@@ -1,5 +1,5 @@
+import Link from "next/link";
 import React from "react";
-import { Link } from "react-router-dom";
 
 interface DashboardItem01Props {
   urlTo: string;
@@ -16,7 +16,7 @@ const DashboardItem01: React.FC<DashboardItem01Props> = ({
 }) => {
   return (
     <Link
-      to={urlTo}
+      href={urlTo}
       className="text-verde-escuro items-center justify-center flex flex-col p-4 rounded border-verde-escuro border hover:bg-verde-escuro hover:text-white cursor-pointer duration-150"
     >
       {icon}

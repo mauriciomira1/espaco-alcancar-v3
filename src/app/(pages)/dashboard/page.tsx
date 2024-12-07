@@ -1,7 +1,7 @@
 "use client";
 import config from "@/app/config/variables";
 import { useEffect, useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { useRouter } from "next/router";
 import DashboardMenu from "./DashboardMenu";
 
 // Interfaces para tipar a resposta
@@ -33,14 +33,14 @@ const Dashboard = () => {
   const [error, setError] = useState<string | null>(null);
   const token = localStorage.getItem("espaco-alcancar");
 
-  const navigate = useNavigate();
+  const router = useRouter();
 
   useEffect(() => {
     const fetchUserData = async () => {
       if (!token) {
         console.error("Token not found");
         setError("Token not found");
-        navigate("/login");
+        router.push("/login");
         return;
       }
 
@@ -54,7 +54,7 @@ const Dashboard = () => {
         });
 
         if (response.status !== 200) {
-          navigate("/login");
+          router.push("/login");
           console.error("Token inválido");
           setError("Token inválido");
           return;
@@ -70,9 +70,9 @@ const Dashboard = () => {
         const data: UserDashboardResponse = await response.json();
         setUser(data);
 
-        // Verificando se o usuário possi a role "PATIENT" para poder acessar essa página
+        // Verificando se o usuário possui a role "PATIENT" para poder acessar essa página
         if (!data.profileType.patient) {
-          navigate("/professional/dashboard");
+          router.push("/professional/dashboard");
         }
       } catch (error) {
         setError("Failed to fetch user data: " + (error as Error).message);
@@ -80,11 +80,11 @@ const Dashboard = () => {
     };
 
     fetchUserData();
-  }, [token, navigate]);
+  }, [token, router]);
 
   const handleLogout = () => {
     localStorage.removeItem("espaco-alcancar");
-    navigate(0);
+    router.push("/login");
   };
 
   if (error) {
@@ -105,7 +105,6 @@ const Dashboard = () => {
       <p className="font-titulos text-verde-claro pb-14">
         Bem vindo(a) {firstName}
       </p>
-      <Outlet />
       <DashboardMenu handleLogout={handleLogout} />
     </div>
   );

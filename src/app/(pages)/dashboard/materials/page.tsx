@@ -1,7 +1,7 @@
 "use client";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { FaArrowLeft } from "react-icons/fa";
-import { Link } from "react-router-dom";
 
 interface Material {
   id: number;
@@ -35,7 +35,10 @@ const Materials: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center w-full h-screen bg-white pt-10">
-      <Link to="/dashboard" className="flex items-center text-verde-escuro p-4">
+      <Link
+        href="/dashboard"
+        className="flex items-center text-verde-escuro p-4"
+      >
         <FaArrowLeft className="mr-1" />
         Voltar
       </Link>

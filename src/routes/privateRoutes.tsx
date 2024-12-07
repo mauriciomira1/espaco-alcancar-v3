@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Navigate } from "react-router-dom";
+import { useRouter } from "next/router";
 
 interface PrivateRoutesProps {
   Component: React.ComponentType;
@@ -11,11 +11,14 @@ const PrivateRoutes: FC<PrivateRoutesProps> = ({ Component }) => {
     localStorage.getItem("professional-espaco-alcancar") ||
     "null";
 
-  return session && session !== "null" ? (
-    <Component />
-  ) : (
-    <Navigate to="/login" />
-  );
+  const router = useRouter();
+
+  if (!session || session === "null") {
+    router.push("/login");
+    return null;
+  }
+
+  return <Component />;
 };
 
 export default PrivateRoutes;

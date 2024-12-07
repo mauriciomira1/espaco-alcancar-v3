@@ -5,7 +5,7 @@ import { BsWhatsapp } from "react-icons/bs";
 import logo from "@/../public/common/logo_nome.svg";
 import Image from "next/image";
 import WindowMenu from "./WindowMenu"; // Ajuste o caminho conforme necessário
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 const MenuMobile = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -43,11 +43,11 @@ const MenuMobile = () => {
         >
           <HiMenu />
         </span>
-        <Link to="/">
+        <Link href="/">
           <Image src={logo} alt="Logotipo Espaço Alcançar" width={100} />
         </Link>
         <Link
-          to="https://wa.me/5561994250846"
+          href="https://wa.me/5561994250846"
           target="_blank"
           className="text-green-900 text-4xl hover:text-green-600 active:text-green-500 duration-150"
         >

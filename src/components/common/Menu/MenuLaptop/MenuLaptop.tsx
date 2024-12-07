@@ -4,7 +4,7 @@ import Image from "next/image";
 import BtnMarcarAgora from "./btnMarcarAgora";
 import ItemMenu from "./itemMenu";
 import ItemMenuModelo2 from "./itemMenuModelo2";
-import { Link, useLocation } from "react-router-dom";
+import Link from "next/link";
 
 const MenuLaptop = () => {
   const [isProfessionalLoggedIn, setIsProfessionalLoggedIn] = useState(false);
@@ -21,7 +21,7 @@ const MenuLaptop = () => {
   return (
     <nav className="bg-white drop-shadow-lg w-full flex justify-between items-center px-4 h-16">
       <div>
-        <Link to="/">
+        <Link href="/">
           <Image
             src={logoCompacto}
             alt="Logotipo Espaço Alcançar"

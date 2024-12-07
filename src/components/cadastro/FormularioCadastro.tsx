@@ -16,7 +16,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import config from "@/app/config/variables";
 import { useRouter } from "next/navigation";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 // Validação de formulário com Zod
 const createUserFormSchema = z
@@ -153,7 +153,7 @@ const FormularioCadastro = () => {
             Conta criada com sucesso! Faça login.
           </h2>
           <Link
-            to="/login"
+            href="/login"
             className="mt-4 font-bold text-secondaryColor hover:bg-verde-escuro text-white rounded-md items-center justify-center bg-verde-claro px-4 py-2"
           >
             Ir para a página de login
@@ -364,7 +364,7 @@ const FormularioCadastro = () => {
           <p className="mt-3 cursor-default font-paragrafos text-sm font-semibold text-primaryColor">
             Já tem uma conta?
             <Link
-              to="/login"
+              href="/login"
               className="ml-1 font-bold text-secondaryColor hover:text-orange-800"
             >
               Faça login.
