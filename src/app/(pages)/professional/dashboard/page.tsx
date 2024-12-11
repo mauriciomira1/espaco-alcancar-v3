@@ -1,11 +1,10 @@
 "use client";
 import config from "@/app/config/variables";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import DashboardProfessionalMenu from "./DashboardProfessionalMenu";
 
 // Interface para a resposta
-
 interface ProfileType {
   patient: boolean;
   professional: boolean;
@@ -28,9 +27,14 @@ interface ProfessionalDashboardResponse {
 const ProfessionalDashboardPage = () => {
   const [user, setUser] = useState<ProfessionalDashboardResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const token = localStorage.getItem("professional-espaco-alcancar");
+  const [token, setToken] = useState<string | null>(null);
 
   const router = useRouter();
+
+  useEffect(() => {
+    const storedToken = localStorage.getItem("professional-espaco-alcancar");
+    setToken(storedToken);
+  }, []);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -70,6 +74,7 @@ const ProfessionalDashboardPage = () => {
         // Verificando se o usuário possi a role "PROFESSIONAL" para poder acessar essa página
         if (!data.profileType.professional) {
           router.push("/login");
+          ("");
         }
       } catch (error) {
         setError("Failed to fetch user data: " + (error as Error).message);
@@ -81,7 +86,7 @@ const ProfessionalDashboardPage = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("professional-espaco-alcancar");
-    router.reload();
+    router.refresh();
   };
 
   if (error) {

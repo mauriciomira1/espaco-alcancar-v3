@@ -1,7 +1,6 @@
 "use client";
 import config from "@/app/config/variables";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
 import DashboardMenu from "./DashboardMenu";
 
 // Interfaces para tipar a resposta
