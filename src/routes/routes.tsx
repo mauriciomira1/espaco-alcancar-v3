@@ -5,7 +5,7 @@ const RoutesComponent = () => {
   return (
     <div>
       <MenuPrincipal />
-      <Link href="/" className="hidden">
+      {/*       <Link href="/" className="hidden">
         Home
       </Link>
       <Link href="/nosso-espaco" className="hidden">
@@ -28,7 +28,7 @@ const RoutesComponent = () => {
       </Link>
       <Link href="/cadastro" className="hidden">
         Cadastro
-      </Link>
+      </Link> */}
     </div>
   );
 };

@@ -2,6 +2,7 @@
 import config from "@/app/config/variables";
 import { useEffect, useState } from "react";
 import DashboardMenu from "./DashboardMenu";
+import { useRouter } from "next/navigation";
 
 // Interfaces para tipar a resposta
 interface Address {

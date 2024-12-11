@@ -1,13 +1,13 @@
 "use client";
 
-import { useRouter } from "next/router";
+import { useRouter, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { SensoryProfileResponseInterface } from "@/interfaces/SensoryProfileInterfaces";
 import config from "@/app/config/variables";
 
 export default function SensoryProfileDetails() {
   const router = useRouter();
-  const { id } = router.query;
+  const { id } = useParams();
   const [profile, setProfile] =
     useState<SensoryProfileResponseInterface | null>(null);
   const [questions, setQuestions] = useState<string[]>([]);

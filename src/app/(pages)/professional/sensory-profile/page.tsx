@@ -3,7 +3,7 @@ import config from "@/app/config/variables";
 import { useEffect, useState } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { SensoryProfileResponseInterface } from "@/interfaces/SensoryProfileInterfaces";
 import {
   Command,

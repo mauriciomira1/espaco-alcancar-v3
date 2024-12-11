@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { FaArrowLeft, FaCheck, FaPencilAlt } from "react-icons/fa";
 import config from "@/app/config/variables";
 import Notification from "./notification";
@@ -61,9 +61,8 @@ const Profile: React.FC = () => {
     message: string;
     type: "success" | "error";
   }>({ visible: false, message: "", type: "success" });
-
+  const [token, setToken] = useState<string | null>(null);
   const router = useRouter();
-  const token = localStorage.getItem("espaco-alcancar");
 
   const relationshipOptions = {
     FATHER: "Pai",
@@ -85,6 +84,7 @@ const Profile: React.FC = () => {
   };
 
   useEffect(() => {
+    setToken(localStorage.getItem("espaco-alcancar"));
     const fetchUserData = async () => {
       try {
         if (!token) {

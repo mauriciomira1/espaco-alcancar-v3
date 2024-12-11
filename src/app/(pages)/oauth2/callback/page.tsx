@@ -21,7 +21,7 @@ const OAuth2Callback: React.FC = () => {
         localStorage.setItem("espaco-alcancar", token);
 
         // Use replace ao invés de push para evitar histórico indesejado
-        await router.replace("/dashboard");
+        router.replace("/dashboard");
       } catch (error) {
         console.error("Erro no callback:", error);
         router.replace("/login");
