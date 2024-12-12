@@ -4,15 +4,14 @@ import MenuLaptop from "@/components/common/Menu/MenuLaptop/MenuLaptop";
 import { useEffect, useState } from "react";
 
 const MenuPrincipal = () => {
-  const [isMobile, setIsMobile] = useState(
-    typeof window !== "undefined" ? window.innerWidth < 1080 : false
-  );
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 1080);
     };
 
+    handleResize(); // Set initial state
     window.addEventListener("resize", handleResize);
 
     return () => {
