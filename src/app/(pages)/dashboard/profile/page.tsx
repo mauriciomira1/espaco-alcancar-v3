@@ -5,6 +5,7 @@ import { FaArrowLeft, FaCheck, FaPencilAlt } from "react-icons/fa";
 import config from "@/app/config/variables";
 import Notification from "./notification";
 import Childs from "./childs";
+import { UserDashboardInterface } from "@/interfaces/UserInterfaces";
 
 type FormData = {
   name: string;
@@ -22,18 +23,6 @@ type FormData = {
     admin: boolean;
   };
 };
-
-interface UserDashboardResponse {
-  name: string;
-  email: string;
-  phone: string;
-  relationship: string;
-  address: {
-    address: string;
-    city: string;
-    complement: string;
-  };
-}
 
 const Profile: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
@@ -53,7 +42,7 @@ const Profile: React.FC = () => {
     },
   });
 
-  const [userData, setUserData] = useState<UserDashboardResponse | null>(null);
+  const [userData, setUserData] = useState<UserDashboardInterface | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState<{ [key: string]: boolean }>({});
   const [notification, setNotification] = useState<{
@@ -84,8 +73,8 @@ const Profile: React.FC = () => {
   };
 
   useEffect(() => {
-    setToken(localStorage.getItem("espaco-alcancar"));
     const fetchUserData = async () => {
+      const token = localStorage.getItem("espaco-alcancar");
       try {
         if (!token) {
           setError("Token não encontrado");
@@ -105,7 +94,7 @@ const Profile: React.FC = () => {
           return;
         }
 
-        const userData = await userResponse.json();
+        const userData: UserDashboardInterface = await userResponse.json();
         setUserData(userData);
         setFormData({
           name: userData.name || "",
@@ -130,7 +119,12 @@ const Profile: React.FC = () => {
     };
 
     fetchUserData();
-  }, [token, router]);
+  }, [router]);
+
+  useEffect(() => {
+    const storedToken = localStorage.getItem("espaco-alcancar");
+    setToken(storedToken);
+  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -449,7 +443,7 @@ const Profile: React.FC = () => {
           type={notification.type}
         />
       )}
-      <Childs token={token!} />
+      {token ? <Childs token={token!} /> : null}
     </div>
   );
 };

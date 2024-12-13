@@ -77,13 +77,7 @@ const FormularioLogin: React.FC = () => {
       const result = await response.json();
       localStorage.setItem("espaco-alcancar", result.token);
 
-      /*       if (result.roles.includes("PROFESSIONAL")) {
-        window.location.href = "/professional-dashboard";
-      } else if (result.roles.includes("PATIENT")) { */
       window.location.href = "/dashboard";
-      /*       } else if (result.roles.includes("ADMIN")) {
-        window.location.href = "/admin-dashboard";
-      } */
     } catch (error) {
       console.error("Erro ao fazer login:", error);
       setErrorMessage("Erro ao fazer login. Tente novamente mais tarde.");

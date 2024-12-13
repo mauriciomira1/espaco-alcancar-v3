@@ -1,7 +1,7 @@
-import { ProfileType } from "./Profile";
+import { ProfileType } from "./ProfileInterfaces";
 
 export interface ProfessionalDashboardResponse {
-  id: number;
+  id: string;
   name: string;
   phone: string;
   email: string;

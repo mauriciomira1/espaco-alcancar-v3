@@ -68,11 +68,12 @@ const Rate: React.FC = () => {
 
   return (
     <div className="w-full flex flex-col h-screen bg-white pt-12 items-center p-5">
-      <Link href="/dashboard">
-        <a className="flex items-center text-verde-escuro p-4">
-          <FaArrowLeft className="mr-1" />
-          Voltar
-        </a>
+      <Link
+        href="/dashboard"
+        className="flex items-center text-verde-escuro p-4"
+      >
+        <FaArrowLeft className="mr-1" />
+        Voltar
       </Link>
       <div className="bg-gray-200 p-6 mb-10 rounded-lg justify-center items-center shadow-md w-full max-w-md">
         {submitted ? (

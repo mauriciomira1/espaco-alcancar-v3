@@ -2,43 +2,24 @@
 import config from "@/app/config/variables";
 import { useEffect, useState } from "react";
 import DashboardMenu from "./DashboardMenu";
+import { UserDashboardInterface } from "@/interfaces/UserInterfaces";
 import { useRouter } from "next/navigation";
 
 // Interfaces para tipar a resposta
-interface Address {
-  address: string;
-  city: string;
-  complement: string;
-}
-
-interface ProfileType {
-  patient: boolean;
-  professional: boolean;
-  admin: boolean;
-}
-
-interface UserDashboardResponse {
-  id: number;
-  name: string;
-  phone: string;
-  email: string;
-  children: any[]; // Definir uma interface específica para os filhos, se necessário
-  gender: "MALE" | "FEMALE";
-  address: Address;
-  profileType: ProfileType;
-}
 
 const Dashboard = () => {
-  const [user, setUser] = useState<UserDashboardResponse | null>(null);
+  const [user, setUser] = useState<UserDashboardInterface | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const token = localStorage.getItem("espaco-alcancar");
+  const [token, setToken] = useState<string | null>(null);
 
   const router = useRouter();
 
   useEffect(() => {
+    const currentToken = localStorage.getItem("espaco-alcancar");
+    setToken(currentToken);
     const fetchUserData = async () => {
-      if (!token) {
-        console.error("Token not found");
+      if (!currentToken) {
+        console.error("currentToken not found");
         setError("Token not found");
         router.push("/login");
         return;
@@ -48,7 +29,7 @@ const Dashboard = () => {
         const response = await fetch(`${config.apiBaseUrl}/user/me`, {
           method: "GET",
           headers: {
-            Authorization: "Bearer " + token,
+            Authorization: "Bearer " + currentToken,
             "Content-Type": "application/json",
           },
         });
@@ -67,7 +48,7 @@ const Dashboard = () => {
           return;
         }
 
-        const data: UserDashboardResponse = await response.json();
+        const data: UserDashboardInterface = await response.json();
         setUser(data);
 
         // Verificando se o usuário possui a role "PATIENT" para poder acessar essa página

@@ -16,7 +16,7 @@ export default function RootLayout({
   return (
     <html lang="pt-br">
       <body
-        className={`${inter.variable} ${raleway.variable} ${quicksand.variable} relative bg-main min-h-screen`}
+        className={`${inter.variable} ${raleway.variable} ${quicksand.variable} relative bg-main min-h-screen vsc-initialized`}
       >
         <ClientLayout>{children}</ClientLayout>
       </body>

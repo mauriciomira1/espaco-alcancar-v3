@@ -1,20 +1,29 @@
+"use client";
 import React, { useEffect, useState } from "react";
 import { FaPencilAlt, FaCheck, FaTrash } from "react-icons/fa";
 import config from "@/app/config/variables";
-
-interface Child {
-  id: number;
-  name: string;
-  birth: string;
-  gender: string;
-}
+import { ChildDefaultResponse } from "@/interfaces/ChildInterfaces";
 
 interface ChildsProps {
   token: string;
 }
 
-const Childs: React.FC<ChildsProps> = ({ token }) => {
-  const [children, setChildren] = useState<Child[]>([]);
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  // Add timezone offset to get correct local date
+  const timezoneOffset = date.getTimezoneOffset() * 60000;
+  const adjustedDate = new Date(date.getTime() + timezoneOffset);
+
+  return adjustedDate.toLocaleDateString("pt-BR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    timeZone: "UTC",
+  });
+};
+
+const Childs = ({ token }: ChildsProps) => {
+  const [children, setChildren] = useState<ChildDefaultResponse[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState<{ [key: string]: boolean }>({});
   const [formData, setFormData] = useState<{ [key: string]: string }>({});
@@ -30,34 +39,50 @@ const Childs: React.FC<ChildsProps> = ({ token }) => {
     birth: "",
     gender: "FEMALE",
   });
-  const sortedChildren = children.sort((a, b) => a.id - b.id);
+  const sortedChildren = children.sort((a, b) => a.name.localeCompare(b.name));
 
   const fetchChildrenData = async () => {
+    console.log(token);
     try {
+      if (!token) {
+        console.error("Token não disponível");
+        setError("Você precisa estar logado para acessar esta página.");
+        return;
+      }
+
       const response = await fetch(`${config.apiBaseUrl}/user/children/list`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
-      if (response.status !== 200) {
-        console.error("Erro ao buscar dependentes");
-        setError("Erro ao buscar dependentes");
+      if (!response.ok) {
+        console.error(`Erro HTTP! status: ${response.status}`);
+        setError(`Erro ao buscar dependentes: ${response.statusText}`);
         return;
       }
 
-      const childrenData = await response.json();
+      const childrenData: ChildDefaultResponse[] = await response.json();
       setChildren(childrenData);
+
+      // Inicializa o formData com os dados das crianças
+      const initialFormData: { [key: string]: any } = {};
+      childrenData.forEach((child) => {
+        initialFormData[`name-${child.id}`] = child.name;
+        initialFormData[`birth-${child.id}`] = child.birth;
+        // Adicione outros campos conforme necessário
+      });
+      setFormData(initialFormData);
     } catch (error) {
       console.error("Erro ao buscar dependentes:", error);
-      setError("Failed to fetch children data: " + (error as Error).message);
+      setError("Erro ao buscar dependentes");
     }
   };
 
   useEffect(() => {
     fetchChildrenData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token, isFetch]);
+  }, []);
 
   const handleAddDependent = async () => {
     try {
@@ -94,7 +119,7 @@ const Childs: React.FC<ChildsProps> = ({ token }) => {
     }
   };
 
-  const handleRemoveDependent = async (childId: number) => {
+  const handleRemoveDependent = async (childId: string) => {
     try {
       const response = await fetch(
         `${config.apiBaseUrl}/user/children/remove`,
@@ -154,7 +179,7 @@ const Childs: React.FC<ChildsProps> = ({ token }) => {
     }));
   };
 
-  const handleUpdate = async (childId: number, field: string) => {
+  const handleUpdate = async (childId: string, field: string) => {
     const childIndex = children.findIndex((child) => child.id === childId);
     if (childIndex === -1) {
       console.error("Child not found");
@@ -187,6 +212,7 @@ const Childs: React.FC<ChildsProps> = ({ token }) => {
       }
 
       const updatedChild = await response.json();
+
       setChildren((prevChildren) =>
         prevChildren.map((child) =>
           child.id === updatedChild.id ? updatedChild : child
@@ -196,13 +222,24 @@ const Childs: React.FC<ChildsProps> = ({ token }) => {
         ...prevState,
         [`${childId}-${field}`]: false,
       }));
+
+      // Atualiza o formData com os novos dados
+      setFormData((prevData) => ({
+        ...prevData,
+        [`name-${childId}`]: updatedChild.name,
+        [`birth-${childId}`]: updatedChild.birth,
+        [`gender-${childId}`]: updatedChild,
+      }));
+
+      /*       const updatedFormData = { ...formData };
+      updatedFormData[`name-${childId}`] = updatedChild.name; */
     } catch (error) {
       console.error("Error updating child data:", error);
       setError("Failed to update child data: " + (error as Error).message);
     }
   };
 
-  const toggleEdit = (childId: number, field: string) => {
+  const toggleEdit = (childId: string, field: string) => {
     setIsEditing((prev) => ({
       ...prev,
       [`${childId}-${field}`]: !prev[`${childId}-${field}`],
@@ -253,12 +290,14 @@ const Childs: React.FC<ChildsProps> = ({ token }) => {
                         type="text"
                         id={`name-${child.id}`}
                         name={`name-${child.id}`}
-                        value={formData[`name-${child.id}`] || child.name}
+                        value={formData[`name-${child.id}`] || ""}
                         onChange={handleChange}
                         className={inputClassesName}
                       />
                     ) : (
-                      <p className={paragraphClassesName}>{child.name}</p>
+                      <p className={paragraphClassesName} key={child.id}>
+                        {child.name}
+                      </p>
                     )}
                     <button
                       type="button"
@@ -296,7 +335,9 @@ const Childs: React.FC<ChildsProps> = ({ token }) => {
                         className={inputClassesName}
                       />
                     ) : (
-                      <p className={paragraphClassesName}>{child.birth}</p>
+                      <p className={paragraphClassesName}>
+                        {formatDate(child.birth)}
+                      </p>
                     )}
                     <button
                       type="button"

@@ -1,10 +1,18 @@
 "use client";
+// Icons
+import { FaArrowLeft } from "react-icons/fa";
+import { MdKeyboardArrowDown } from "react-icons/md";
+
 import config from "@/app/config/variables";
 import { useEffect, useState } from "react";
-import { FaArrowLeft } from "react-icons/fa";
+
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+
+//Interfaces
 import { SensoryProfileResponseInterface } from "@/interfaces/SensoryProfileInterfaces";
+
+// Components ShadcnUI
 import {
   Command,
   CommandEmpty,
@@ -99,19 +107,25 @@ const SensoryProfilePage = () => {
         Área do profissional
       </h1>
       <div className="w-full">
-        <Link href="/professional/dashboard">
-          <a className="flex items-center text-sm justify-center bg-verde-escuro text-white mb-8 w-20 rounded-md p-1">
-            <FaArrowLeft className="mr-1" />
-            Voltar
-          </a>
+        <Link
+          href="/professional/dashboard"
+          className="flex items-center text-sm justify-center bg-verde-escuro text-white mb-8 w-20 rounded-md p-1"
+        >
+          <FaArrowLeft className="mr-1" />
+          Voltar
         </Link>
       </div>
       <div className="text-verde-escuro items-center justify-center flex flex-col p-3 rounded border-verde-escuro border cursor-pointer duration-150">
         <h2 className="text-sm font-titulos">Meus perfis sensoriais</h2>
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
-            <button className="w-full px-4 py-2 text-left bg-white border rounded-md">
-              {inputValue || "Selecione um perfil sensorial"}
+            <button className="mt-3 w-full flex items-center gap-2 px-2 py-2 text-left text-sm bg-white border rounded-md">
+              {inputValue || (
+                <>
+                  Selecione um perfil sensorial{" "}
+                  <MdKeyboardArrowDown size={22} />
+                </>
+              )}
             </button>
           </PopoverTrigger>
           <PopoverContent className="w-full p-0">

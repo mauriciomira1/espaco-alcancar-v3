@@ -3,26 +3,7 @@ import config from "@/app/config/variables";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import DashboardProfessionalMenu from "./DashboardProfessionalMenu";
-
-// Interface para a resposta
-interface ProfileType {
-  patient: boolean;
-  professional: boolean;
-  admin: boolean;
-}
-
-interface ProfessionalDashboardResponse {
-  id: number;
-  name: string;
-  phone: string;
-  email: string;
-  password: string;
-  active: boolean;
-  birth: string;
-  registerNumber: string;
-  occupation: string;
-  profileType: ProfileType;
-}
+import { ProfessionalDashboardResponse } from "@/interfaces/ProfessionalInterfaces";
 
 const ProfessionalDashboardPage = () => {
   const [user, setUser] = useState<ProfessionalDashboardResponse | null>(null);
@@ -37,10 +18,9 @@ const ProfessionalDashboardPage = () => {
   }, []);
 
   useEffect(() => {
+    const token = localStorage.getItem("professional-espaco-alcancar");
     const fetchUserData = async () => {
       if (!token) {
-        console.error("Token not found");
-        setError("Token not found");
         router.push("/login-professional");
         return;
       }
@@ -56,8 +36,6 @@ const ProfessionalDashboardPage = () => {
 
         if (response.status !== 200) {
           router.push("/login");
-          console.error("Token inválido");
-          setError("Token inválido");
           return;
         }
 
@@ -82,7 +60,7 @@ const ProfessionalDashboardPage = () => {
     };
 
     fetchUserData();
-  }, [token, router]);
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("professional-espaco-alcancar");

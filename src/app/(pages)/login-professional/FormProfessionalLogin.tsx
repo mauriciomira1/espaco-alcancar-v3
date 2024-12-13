@@ -14,6 +14,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 // Variáveis
 import config from "@/app/config/variables";
+import { useRouter } from "next/navigation";
 
 // Validação de formulário com Zod
 const createUserFormSchema = z.object({
@@ -47,6 +48,8 @@ const FormProfessionalLogin: React.FC = () => {
   // Estado para controlar o estado de carregamento
   const [loading, setLoading] = useState(false);
 
+  const router = useRouter();
+
   // Função que executa a requisição para o login
   const loginProfessional = async (data: loginProfessionalFormData) => {
     setLoading(true);
@@ -74,7 +77,7 @@ const FormProfessionalLogin: React.FC = () => {
       const result = await response.json();
 
       localStorage.setItem("professional-espaco-alcancar", result.token);
-      window.location.href = "/professional/dashboard";
+      router.push("/professional/dashboard");
     } catch (error) {
       console.error("Erro ao fazer login:", error);
       setErrorMessage("Erro ao fazer login. Tente novamente mais tarde.");
@@ -89,7 +92,7 @@ const FormProfessionalLogin: React.FC = () => {
       onSubmit={handleSubmit(loginProfessional)}
     >
       <h2 className="font-titulos text-xl font-bold text-gray-900">
-        Bem-vindo
+        Bem-vindo(a)
       </h2>
 
       <p className="mb-5 font-titulos text-xs font-semibold text-white text-center">
