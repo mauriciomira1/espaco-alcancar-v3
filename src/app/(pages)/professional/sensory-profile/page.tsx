@@ -26,6 +26,15 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { ChildDefaultResponse } from "@/interfaces/ChildInterfaces";
 
 interface FrameworksInterface {
   value: string;
@@ -37,11 +46,14 @@ const SensoryProfilePage = () => {
   const [sensoryProfiles, setSensoryProfiles] = useState<
     SensoryProfileResponseInterface[]
   >([]);
+  const [sensoryProfilesOfPatient, setSensoryProfilesOfPatient] = useState<
+    SensoryProfileResponseInterface[]
+  >([]);
+  const [childData, setChildData] = useState<ChildDefaultResponse>();
   const [frameworks, setFrameworks] = useState<FrameworksInterface[]>([]);
-  const [selectedProfile, setSelectedProfile] =
-    useState<SensoryProfileResponseInterface | null>(null);
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
+  const [resultsOfSensoryProfile, setResultsOfSensoryProfile] = useState({});
   const token = localStorage.getItem("professional-espaco-alcancar");
 
   const router = useRouter();
@@ -55,7 +67,7 @@ const SensoryProfilePage = () => {
     }
 
     // Buscar todos Perfis Sensoriais criados pelo atual profissional
-    const fetchUserData = async () => {
+    const fetchSensoryProfilesData = async () => {
       try {
         const response = await fetch(
           `${config.apiBaseUrl}/dashboard/sp/list-all-sensory-profiles-created`,
@@ -85,17 +97,81 @@ const SensoryProfilePage = () => {
       }
     };
 
-    fetchUserData();
+    fetchSensoryProfilesData();
   }, [token, router]);
+
+  const fetchChildData = async (childId: String) => {
+    try {
+      const response = await fetch(
+        `${config.apiBaseUrl}/user/children/find/${childId}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: "Bearer " + token,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        const childData = await response.json();
+        return childData;
+      } else {
+        setError("Failed to fetch child data: " + response.statusText);
+      }
+    } catch (error) {
+      setError("Failed to fetch child data: " + (error as Error).message);
+    }
+  };
+
+  const fetchResultsOfSensoryProfile = async (sensoryProfileId: string) => {
+    try {
+      const response = await fetch(
+        `${config.apiBaseUrl}/dashboard/sp/get-answers-by-sp-id?id=${sensoryProfileId}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: "Bearer " + token,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        const sensoryProfileData = await response.json();
+        setResultsOfSensoryProfile(sensoryProfileData);
+        return sensoryProfileData;
+      } else {
+        setError(
+          "Failed to fetch sensory profile data: " + response.statusText
+        );
+      }
+    } catch (error) {
+      setError(
+        "Failed to fetch sensory profile data: " + (error as Error).message
+      );
+    }
+  };
 
   useEffect(() => {
     setFrameworks(
       sensoryProfiles.map((sp) => ({
-        value: `/professional/sensory-profile/${sp.id}`,
+        value: sp.childId,
         label: sp.childName,
       }))
     );
   }, [sensoryProfiles]);
+
+  // Função que busca alguns detalhes do perfil sensorial do paciente selecionado (pelo array sensoryProfiles)
+  const findSensoryProfilesOfPatient = async (childId: string) => {
+    const sensoryProfilesOfThisPatient = sensoryProfiles.filter(
+      (sensoryProfile) => childId === sensoryProfile.childId
+    );
+
+    setSensoryProfilesOfPatient(sensoryProfilesOfThisPatient);
+    const child = await fetchChildData(childId);
+    setChildData(child);
+  };
 
   if (error) {
     return <div>Error: {error}</div>;
@@ -115,15 +191,14 @@ const SensoryProfilePage = () => {
           Voltar
         </Link>
       </div>
-      <div className="text-verde-escuro items-center justify-center flex flex-col p-3 rounded border-verde-escuro border cursor-pointer duration-150">
+      <div className="text-verde-escuro items-center justify-center flex flex-col p-3 rounded border-verde-escuro border duration-150">
         <h2 className="text-sm font-titulos">Meus perfis sensoriais</h2>
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
             <button className="mt-3 w-full flex items-center gap-2 px-2 py-2 text-left text-sm bg-white border rounded-md">
               {inputValue || (
                 <>
-                  Selecione um perfil sensorial{" "}
-                  <MdKeyboardArrowDown size={22} />
+                  Selecione um paciente <MdKeyboardArrowDown size={22} />
                 </>
               )}
             </button>
@@ -131,7 +206,7 @@ const SensoryProfilePage = () => {
           <PopoverContent className="w-full p-0">
             <Command>
               <CommandInput
-                placeholder="Buscar perfil sensorial..."
+                placeholder="Buscar paciente..."
                 value={inputValue}
                 onValueChange={(value) => setInputValue(value)}
               />
@@ -142,11 +217,10 @@ const SensoryProfilePage = () => {
                     <CommandItem
                       key={framework.value}
                       onSelect={() => {
-                        const selected = sensoryProfiles.find(
-                          (sp) => sp.id === framework.value.split("/").pop()
-                        );
-                        setSelectedProfile(selected || null);
+                        findSensoryProfilesOfPatient(framework.value);
+
                         setInputValue(framework.label);
+
                         setOpen(false);
                       }}
                     >
@@ -158,17 +232,104 @@ const SensoryProfilePage = () => {
             </Command>
           </PopoverContent>
         </Popover>
-        {selectedProfile && (
-          <div className="mt-4">
-            <p>{selectedProfile.resultsOfSensoryProfile}</p>
-            <Link href={`/professional/sensory-profile/${selectedProfile.id}`}>
-              <a className="text-blue-500 underline">Ver perfil completo</a>
-            </Link>
+        {sensoryProfilesOfPatient && (
+          <div className="mt-4 flex flex-col gap-1 text-sm font-subtitulos">
+            {childData && (
+              <div className="font-normal text-sm mb-3">
+                <p> Nome: {childData.name} </p>
+                <p>
+                  Data de nascimento:{" "}
+                  {childData.birth
+                    ? new Date(childData.birth).toLocaleDateString("pt-BR")
+                    : ""}
+                </p>
+              </div>
+            )}
+
+            {sensoryProfilesOfPatient.map((profile) => (
+              <div
+                key={profile.id}
+                className="flex flex-col gap-2 bg-slate-200 drop-shadow-sm shadow-lg shadow-gray-300 rounded-md p-2"
+              >
+                <p>
+                  Data de criação:{" "}
+                  {new Date(profile.createdAt).toLocaleDateString("pt-BR")}
+                </p>
+                <p className="flex justify-between items-center gap-2">
+                  Status:{" "}
+                  {profile.status === "FINISHED" ? (
+                    <>
+                      Preenchido
+                      <span className="w-3 h-3 bg-green-500 rounded-full ml-auto"></span>
+                    </>
+                  ) : profile.status === "UNFILLED" ? (
+                    <>
+                      Não preenchido
+                      <span className="w-3 h-3 bg-red-500 rounded-full ml-auto"></span>
+                    </>
+                  ) : (
+                    <>
+                      Parcialmente preenchido
+                      <span className="w-3 h-3 bg-orange-500 rounded-full ml-auto"></span>
+                    </>
+                  )}
+                </p>
+                <Dialog>
+                  <DialogTrigger
+                    className="bg-verde-escuro px-3 py-1.5 rounded-md text-white my-2"
+                    onClick={() => fetchResultsOfSensoryProfile(profile.id)}
+                  >
+                    Resultados do Perfil
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                      <DialogTitle>Resultados do Perfil Sensorial</DialogTitle>
+                    </DialogHeader>
+                    <table className="min-w-full divide-y divide-gray-200">
+                      <thead className="bg-gray-50">
+                        <tr>
+                          <th
+                            scope="col"
+                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                          >
+                            Item
+                          </th>
+                          <th
+                            scope="col"
+                            className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+                          >
+                            Pontuação
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="bg-white divide-y divide-gray-200">
+                        {Object.entries(resultsOfSensoryProfile).map(
+                          ([title, value]) => (
+                            <tr key={title}>
+                              <td className="px-6 py-4 whitespace-nowrap text-left text-sm font-medium text-gray-900">
+                                {title}
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">
+                                {Number(value)}
+                              </td>
+                            </tr>
+                          )
+                        )}
+                      </tbody>
+                    </table>
+                  </DialogContent>
+                </Dialog>
+                <Link
+                  href={`/professional/sensory-profile/${profile.id}`}
+                  className="bg-pessego px-3 py-1.5 rounded-md text-white flex items-center justify-center"
+                >
+                  Ver perfil sensorial completo
+                </Link>
+              </div>
+            ))}
           </div>
         )}
       </div>
-
-      {/* <Outlet /> */}
     </div>
   );
 };
