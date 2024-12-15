@@ -11,7 +11,7 @@ const DashboardProfessionalMenu: React.FC<DashboardMenuProps> = ({
   handleLogout,
 }) => {
   return (
-    <nav className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5 gap-8 px-2 justify-center">
+    <nav className="grid grid-cols-2 sm:grid-cols-3 md:px-12 gap-8 px-2 center">
       <DashboardItem01
         title="Perfil Sensorial"
         description="Disponibilize o perfil para seus pacientes preencherem"
@@ -24,6 +24,7 @@ const DashboardProfessionalMenu: React.FC<DashboardMenuProps> = ({
         description="Visualize e Atualize seus dados pessoais"
         urlTo="/professional/profile"
       />
+
       <button
         className="text-white items-center justify-center flex flex-col p-4 rounded bg-gray-400 active:bg-gray-700 cursor-pointer duration-150"
         onClick={handleLogout}

@@ -5,6 +5,9 @@ import { useRouter } from "next/navigation";
 import DashboardProfessionalMenu from "./DashboardProfessionalMenu";
 import { ProfessionalDashboardResponse } from "@/interfaces/ProfessionalInterfaces";
 
+// Ícones
+import { AiOutlineLoading } from "react-icons/ai";
+
 const ProfessionalDashboardPage = () => {
   const [user, setUser] = useState<ProfessionalDashboardResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -72,7 +75,13 @@ const ProfessionalDashboardPage = () => {
   }
 
   if (!user) {
-    return <div>Carregando...</div>;
+    return (
+      <div className="h-screen w-screen bg-gradient-to-b from-[#2D1C40] to-[#39719A] flex items-center justify-center">
+        <div className="animate-spin-fast text-6xl text-pessego">
+          <AiOutlineLoading />
+        </div>
+      </div>
+    );
   }
 
   return (

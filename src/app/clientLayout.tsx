@@ -1,13 +1,12 @@
 "use client";
 import RoutesComponent from "@/routes/routes";
-import React, { useEffect } from "react";
+import React from "react";
 
 export default function ClientLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-
   return (
     <div>
       <RoutesComponent />
