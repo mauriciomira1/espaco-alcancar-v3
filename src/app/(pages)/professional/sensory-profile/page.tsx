@@ -1,7 +1,6 @@
 "use client";
 // Icons
 import { FaArrowLeft } from "react-icons/fa";
-import { MdKeyboardArrowDown } from "react-icons/md";
 
 import config from "@/app/config/variables";
 import { useEffect, useState } from "react";
@@ -30,6 +29,9 @@ import {
 
 // Componentes
 import DialogSensoryProfileResume from "@/components/userDashboard/sensoryProfile/dialogSensoryProfileResume";
+import BoxNewSensoryProfile from "./(sensoryProfileDetails)/boxNewSensoryProfile";
+import { Button } from "@/components/ui/button";
+import { ChevronsUpDown } from "lucide-react";
 
 interface FrameworksInterface {
   value: string;
@@ -53,6 +55,9 @@ const SensoryProfilePage = () => {
   );
   const [resultsOfSensoryProfile, setResultsOfSensoryProfile] = useState({});
   const token = localStorage.getItem("professional-espaco-alcancar");
+  const [childToCreateProfile, setChildToCreateProfile] = useState<
+    string | null
+  >();
 
   const router = useRouter();
 
@@ -67,12 +72,16 @@ const SensoryProfilePage = () => {
     // Buscar todos Perfis Sensoriais criados pelo atual profissional
     const fetchSensoryProfilesData = async () => {
       try {
+        const currentToken =
+          typeof window !== "undefined"
+            ? localStorage.getItem("professional-espaco-alcancar")
+            : null;
         const response = await fetch(
           `${config.apiBaseUrl}/dashboard/sp/list-all-sensory-profiles-created`,
           {
             method: "GET",
             headers: {
-              Authorization: "Bearer " + token,
+              Authorization: "Bearer " + currentToken,
               "Content-Type": "application/json",
             },
           }
@@ -101,12 +110,16 @@ const SensoryProfilePage = () => {
 
   const fetchChildData = async (childId: String) => {
     try {
+      const currentToken =
+        typeof window !== "undefined"
+          ? localStorage.getItem("professional-espaco-alcancar")
+          : null;
       const response = await fetch(
         `${config.apiBaseUrl}/user/children/find/${childId}`,
         {
           method: "GET",
           headers: {
-            Authorization: "Bearer " + token,
+            Authorization: "Bearer " + currentToken,
             "Content-Type": "application/json",
           },
         }
@@ -146,13 +159,16 @@ const SensoryProfilePage = () => {
 
   const fetchResultsOfSensoryProfile = async (profileId: string) => {
     try {
+      let currentToken = null;
+      if (typeof window !== "undefined") {
+        currentToken = localStorage.getItem("professional-espaco-alcancar");
+      }
+
       const response = await fetch(
         `${config.apiBaseUrl}/dashboard/sp/get-answers-by-sp-id?id=${profileId}`,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem(
-              "professional-espaco-alcancar"
-            )}`,
+            Authorization: `Bearer ${currentToken}`,
           },
         }
       );
@@ -186,13 +202,19 @@ const SensoryProfilePage = () => {
         <h2 className="text-sm font-titulos">Meus perfis sensoriais</h2>
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
-            <button className="mt-3 w-full flex items-center justify-between gap-2 px-3 py-2 text-left text-sm bg-white border rounded-md">
+            <Button
+              variant="outline"
+              role="combobox"
+              aria-expanded={open}
+              className="mt-3 w-full flex items-center justify-between gap-2 px-3 py-2 text-left text-sm bg-white border rounded-md"
+            >
               {inputValue || (
                 <>
-                  Selecione um paciente <MdKeyboardArrowDown size={22} />
+                  Selecione um paciente{" "}
+                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </>
               )}
-            </button>
+            </Button>
           </PopoverTrigger>
           <PopoverContent className="w-full p-0">
             <Command className="sm:w-[500px]">
@@ -282,6 +304,7 @@ const SensoryProfilePage = () => {
           </div>
         )}
       </div>
+      <BoxNewSensoryProfile />
     </div>
   );
 };
