@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/popover";
 
 // Componentes
-import DialogSensoryProfileResume from "@/components/userDashboard/sensoryProfile/dialogSensoryProfileResume";
+import DialogSensoryProfileResume from "@/components/professionalDashboard/sensoryProfile/dialogSensoryProfileResume";
 import BoxNewSensoryProfile from "./(sensoryProfileDetails)/boxNewSensoryProfile";
 import { Button } from "@/components/ui/button";
 import { ChevronsUpDown } from "lucide-react";

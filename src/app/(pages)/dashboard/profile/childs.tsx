@@ -404,7 +404,9 @@ const Childs = ({ token }: ChildsProps) => {
             </ul>
           ))
         ) : (
-          <p>Sem dependentes cadastrados.</p>
+          <p className="text-sm font-paragrafos">
+            Sem dependentes cadastrados.
+          </p>
         )}
       </div>
       {isModalOpen && (

@@ -188,7 +188,7 @@ const FormularioLogin: React.FC = () => {
           </button>
         </div>
       </div>
-      <a
+      {/*       <a
         className="hover:border-gray-40000 flex w-full items-center justify-center gap-2 rounded border border-gray-300 bg-white py-2 font-text text-sm font-semibold duration-150 hover:bg-gray-200 active:bg-gray-300 mb-3"
         href={`${config.apiBaseUrl}/oauth2/authorization/google`}
       >
@@ -196,7 +196,7 @@ const FormularioLogin: React.FC = () => {
           <FcGoogle size={24} />
         </span>
         Login com Google
-      </a>
+      </a> */}
 
       <p className="mt-3 cursor-default font-paragrafos text-xs font-semibold text-primaryColor">
         Ainda não tem cadastro?

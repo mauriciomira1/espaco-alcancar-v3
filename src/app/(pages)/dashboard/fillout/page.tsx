@@ -1,11 +1,46 @@
 "use client";
+import config from "@/app/config/variables";
+import AvailableSensoryProfileBox from "@/components/userDashboard/sensoryProfile/availableSensoryProfileBox";
+import {
+  ChildDefaultResponse,
+  ChildFullDataResponse,
+} from "@/interfaces/ChildInterfaces";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 
 const Fillout = () => {
+  const [sensoryProfileId, setSensoryProfileId] = React.useState<
+    string | null
+  >();
+  const [childs, setChilds] = React.useState<ChildFullDataResponse[]>([]);
+  const [sensoryProfiles, setSensoryProfiles] = React.useState<any[]>([]);
+
+  // Buscando todos os dependentes do usuário
+  const fetchChilds = async () => {
+    try {
+      const response = await fetch(`${config.apiBaseUrl}/user/children/list`, {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("espaco-alcancar"),
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      setChilds(data);
+    } catch (error) {
+      throw new Error("Erro ao buscar dependentes");
+    }
+  };
+
+  useEffect(() => {
+    fetchChilds();
+  }, []);
+
+  // Caso existam dependentes, serão buscados os Perfis de todos eles
+
   return (
-    <div className="flex flex-col px-4 bg-white h-screen">
+    <div className="flex flex-col px-4 bg-gray-100 h-screen">
       <Link
         href="/dashboard"
         className="flex items-center justify-center bg-verde-escuro text-white mt-3 mb-8 w-20 rounded-md p-1"
@@ -18,10 +53,7 @@ const Fillout = () => {
           Preenchimento de dados
         </h1>
         <div className="activity-list grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          <div className="activity-item p-4 border rounded shadow">
-            <h2 className="font-titulos text-verde-claro">Perfil Sensorial</h2>
-            <p>Descrição da atividade de Perfil Sensorial.</p>
-          </div>
+          <AvailableSensoryProfileBox />
           <div className="activity-item p-4 border rounded shadow">
             <h2 className="font-titulos text-verde-claro">Perfil Escolar</h2>
             <p>Descrição da atividade de Perfil Escolar.</p>

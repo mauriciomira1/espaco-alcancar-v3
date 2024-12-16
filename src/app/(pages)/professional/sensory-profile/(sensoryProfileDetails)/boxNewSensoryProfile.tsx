@@ -1,6 +1,6 @@
 "use client";
 import config from "@/app/config/variables";
-import ListAllChilds from "@/components/userDashboard/sensoryProfile/listAllChilds";
+import ListAllChilds from "@/components/professionalDashboard/sensoryProfile/listAllChilds";
 import { ChildDefaultResponse } from "@/interfaces/ChildInterfaces";
 import React, { useEffect } from "react";
 import { AiOutlineLoading } from "react-icons/ai";
