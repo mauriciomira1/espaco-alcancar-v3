@@ -303,6 +303,9 @@ const SensoryProfilePage = () => {
             ))}
           </div>
         )}
+        <p className="text-[0.65rem] text-gray-400 -mt-2">
+          São listados apenas pacientes que já possuem Perfil Sensorial criados.
+        </p>
       </div>
       <BoxNewSensoryProfile />
     </div>

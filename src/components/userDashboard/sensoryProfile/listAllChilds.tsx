@@ -39,6 +39,7 @@ const ListAllChilds = ({
       (framework) => framework.value === childValue
     );
     setValue(child?.label || "");
+    setOpen(false);
     if (child?.idSelected) {
       onChildChange(child.idSelected); // Chamando a função de callback quando o child for atualizado
     }

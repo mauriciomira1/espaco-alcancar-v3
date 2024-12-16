@@ -5,10 +5,24 @@ import { ChildDefaultResponse } from "@/interfaces/ChildInterfaces";
 import React, { useEffect } from "react";
 import { AiOutlineLoading } from "react-icons/ai";
 
+// ShadcnUI
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+
 const BoxNewSensoryProfile: React.FC = () => {
   const [frameworks, setFrameworks] = React.useState<
     { idSelected: string; value: string; label: string }[]
   >([]);
+  const [selectedChild, setSelectedChild] = React.useState<string>("");
 
   const fetchChilds = async () => {
     try {
@@ -53,6 +67,9 @@ const BoxNewSensoryProfile: React.FC = () => {
         },
         body: JSON.stringify({ childId }),
       });
+
+      if (response.ok) {
+      }
     } catch (error) {
       console.error("Error to create sensory profile. Try again.", error);
     }
@@ -73,13 +90,40 @@ const BoxNewSensoryProfile: React.FC = () => {
   }
 
   return (
-    <div className="mt-8 text-pessego items-center justify-center  max-sm:w-full sm:w-[600px] flex flex-col p-3 rounded border-pessego border duration-150 ">
+    <div className="shadow-md hover:shadow-lg bg-white mt-8 text-pessego items-center justify-center  max-sm:w-full sm:w-[600px] flex flex-col p-3 rounded border-pessego border duration-150 ">
       <h2 className="text-sm font-titulos">Criar perfil sensorial</h2>
       <ListAllChilds
         placeholder="Selecione o paciente"
         frameworks={frameworks}
-        onChildChange={(childId) => fetchNewSensoryProfile(childId)}
+        onChildChange={(childId) => setSelectedChild(childId)}
       />
+      <AlertDialog>
+        {selectedChild ? (
+          <AlertDialogTrigger className="mt-3 bg-pessego rounded-md w-full py-1.5 text-sm font-subtitulos text-white">
+            Criar Perfil Sensorial
+          </AlertDialogTrigger>
+        ) : null}
+        <AlertDialogContent className="rounded-md mx-2">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-verde-escuro font-titulos text-base">
+              Deseja criar um novo Perfil Sensorial?
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-xs">
+              O perfil sensorial será criado e disponibilizado para
+              preenchimento.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-verde-escuro"
+              onClick={() => fetchNewSensoryProfile(selectedChild)}
+            >
+              Continue
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
