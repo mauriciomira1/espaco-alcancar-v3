@@ -55,9 +55,6 @@ const SensoryProfilePage = () => {
   );
   const [resultsOfSensoryProfile, setResultsOfSensoryProfile] = useState({});
   const token = localStorage.getItem("professional-espaco-alcancar");
-  const [childToCreateProfile, setChildToCreateProfile] = useState<
-    string | null
-  >();
 
   const router = useRouter();
 
@@ -198,7 +195,7 @@ const SensoryProfilePage = () => {
           Voltar
         </Link>
       </div>
-      <div className="text-verde-escuro items-center justify-center  max-sm:w-full sm:w-[600px] flex flex-col p-3 rounded border-verde-escuro border duration-150 ">
+      <div className="text-verde-escuro shadow-md items-center justify-center  max-sm:w-full sm:w-[600px] flex flex-col p-3 rounded border-verde-escuro border duration-150 ">
         <h2 className="text-sm font-titulos">Meus perfis sensoriais</h2>
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
@@ -262,7 +259,7 @@ const SensoryProfilePage = () => {
             {sensoryProfilesOfPatient.map((profile) => (
               <div
                 key={profile.id}
-                className="flex flex-col gap-2 bg-slate-200 drop-shadow-sm shadow-lg shadow-gray-300 rounded-md p-2"
+                className="flex flex-col gap-2 bg-slate-200 drop-shadow-sm rounded-md p-2"
               >
                 <p>
                   Data de criação:{" "}
@@ -303,9 +300,12 @@ const SensoryProfilePage = () => {
             ))}
           </div>
         )}
-        <p className="text-[0.65rem] text-gray-400 -mt-2">
-          São listados apenas pacientes que já possuem Perfil Sensorial criados.
-        </p>
+        {inputValue.length == 0 ? (
+          <p className="text-[0.65rem] text-gray-400 -mt-2">
+            São listados apenas pacientes que já possuem Perfil Sensorial
+            criados.
+          </p>
+        ) : null}
       </div>
       <BoxNewSensoryProfile />
     </div>
