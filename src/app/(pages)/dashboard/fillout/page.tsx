@@ -5,6 +5,7 @@ import {
   ChildDefaultResponse,
   ChildFullDataResponse,
 } from "@/interfaces/ChildInterfaces";
+import { SensoryProfileResponseInterface } from "@/interfaces/SensoryProfileInterfaces";
 import Link from "next/link";
 import React, { useEffect } from "react";
 import { FaArrowLeft } from "react-icons/fa";
@@ -14,7 +15,9 @@ const Fillout = () => {
     string | null
   >();
   const [childs, setChilds] = React.useState<ChildFullDataResponse[]>([]);
-  const [sensoryProfiles, setSensoryProfiles] = React.useState<any[]>([]);
+  const [sensoryProfiles, setSensoryProfiles] = React.useState<
+    SensoryProfileResponseInterface[]
+  >([]);
 
   // Buscando todos os dependentes do usuário
   const fetchChilds = async () => {
@@ -31,13 +34,44 @@ const Fillout = () => {
     } catch (error) {
       throw new Error("Erro ao buscar dependentes");
     }
+  }; /* retorna [] */
+
+  // Buscar perfil sensorial pelo ID
+  const fetchSensoryProfilesOfaChild = async (childId: string) => {
+    try {
+      const response = await fetch(
+        `${config.apiBaseUrl}/dashboard/sp/list-all-of-a-child/${childId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("espaco-alcancar")}`,
+          },
+        }
+      );
+      const data = await response.json();
+      setSensoryProfiles((prev) => [...prev, data]);
+    } catch (error) {
+      console.error("Error fetching sensory profile:", error);
+    }
   };
+
+  useEffect(() => {
+    console.log(sensoryProfiles);
+  }, [sensoryProfiles]);
 
   useEffect(() => {
     fetchChilds();
   }, []);
 
-  // Caso existam dependentes, serão buscados os Perfis de todos eles
+  useEffect(() => {
+    if (childs.length > 0) {
+      childs.map((child) => {
+        fetchSensoryProfilesOfaChild(child.id);
+      });
+    }
+  }, [childs]);
+
+  // Caso existam dependentes, serão buscados os Perfis de todos eles e impresso apenas os 'unfilled'
+  /* useEffect(() => {}, [sensoryProfiles]); */
 
   return (
     <div className="flex flex-col px-4 bg-gray-100 h-screen">
@@ -53,7 +87,27 @@ const Fillout = () => {
           Preenchimento de dados
         </h1>
         <div className="activity-list grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          <AvailableSensoryProfileBox />
+          {sensoryProfiles &&
+            sensoryProfiles.map((sensoryProfile) => {
+              if (sensoryProfile.status == "UNFILLED") {
+                return (
+                  <AvailableSensoryProfileBox
+                    key={sensoryProfile.id}
+                    sensoryProfileId={sensoryProfile.id}
+                    unfilled
+                  />
+                );
+              } else {
+                return (
+                  <AvailableSensoryProfileBox
+                    key={sensoryProfile.id}
+                    sensoryProfileId={sensoryProfile.id}
+                    started
+                  />
+                );
+              }
+            })}
+
           <div className="activity-item p-4 border rounded shadow">
             <h2 className="font-titulos text-verde-claro">Perfil Escolar</h2>
             <p>Descrição da atividade de Perfil Escolar.</p>

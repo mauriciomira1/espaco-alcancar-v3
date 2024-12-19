@@ -6,10 +6,14 @@ import React, { useEffect } from "react";
 
 interface AvailableSensoryProfileBoxProps {
   sensoryProfileId: string;
+  unfilled?: boolean;
+  started?: boolean;
 }
 
 const AvailableSensoryProfileBox: React.FC<AvailableSensoryProfileBoxProps> = ({
   sensoryProfileId,
+  unfilled,
+  started,
 }) => {
   const toast = useToast();
 
@@ -18,7 +22,7 @@ const AvailableSensoryProfileBox: React.FC<AvailableSensoryProfileBoxProps> = ({
       title: "Perfil Sensorial",
       description: "Perfil Sensorial preenchido com sucesso!",
       style: {
-        backgroundColor: "#16a34a",
+        backgroundColor: unfilled ? "#16a34a" : started ? "#f97316" : "#16a34a",
         color: "white",
       },
       duration: 2000,
@@ -38,10 +42,10 @@ const AvailableSensoryProfileBox: React.FC<AvailableSensoryProfileBoxProps> = ({
           Nome do paciente: <strong>Ana Liz</strong>
         </p>
       </div>
-      <div className="w-full flex justify-center">
+      <div className="w-full flex justify-center pb-2">
         <Link
-          href={""}
-          className="duration-100 font-paragrafos text-sm text-green-600 bg-white hover:bg-green-600 hover:text-white border-green-600 border px-3 py-2 my-3 rounded-lg"
+          href={`/dashboard/fillout/${sensoryProfileId}`}
+          className="duration-100 font-subtitulos text-sm text-green-600 bg-white hover:bg-green-600 hover:text-white border-green-600 border px-3 py-2 my-4 rounded-md"
         >
           Preencher agora
         </Link>

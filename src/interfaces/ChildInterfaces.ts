@@ -1,3 +1,5 @@
+import { SensoryProfileResponseInterface } from "./SensoryProfileInterfaces";
+
 export interface ChildDefaultResponse {
   id: string;
   name: string;
@@ -10,7 +12,7 @@ export interface ChildFullDataResponse {
   name: string;
   birth: string;
   userId: string;
-  sensoryProfile: any[];
+  sensoryProfile: SensoryProfileResponseInterface[];
   gender: "MALE" | "FEMALE";
   createdAt: string;
   updatedAt: string;
