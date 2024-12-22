@@ -1,19 +1,19 @@
 "use client";
-import config from "@/app/config/variables";
 import { useToast } from "@/hooks/use-toast";
 import Link from "next/link";
-import React, { useEffect } from "react";
 
 interface AvailableSensoryProfileBoxProps {
   sensoryProfileId: string;
   unfilled?: boolean;
   started?: boolean;
+  filled?: boolean;
 }
 
 const AvailableSensoryProfileBox: React.FC<AvailableSensoryProfileBoxProps> = ({
   sensoryProfileId,
   unfilled,
   started,
+  filled,
 }) => {
   const toast = useToast();
 
@@ -22,7 +22,7 @@ const AvailableSensoryProfileBox: React.FC<AvailableSensoryProfileBoxProps> = ({
       title: "Perfil Sensorial",
       description: "Perfil Sensorial preenchido com sucesso!",
       style: {
-        backgroundColor: unfilled ? "#16a34a" : started ? "#f97316" : "#16a34a",
+        backgroundColor: unfilled ? "#16a34a" : "#f0aa28",
         color: "white",
       },
       duration: 2000,
@@ -30,8 +30,22 @@ const AvailableSensoryProfileBox: React.FC<AvailableSensoryProfileBoxProps> = ({
   };
 
   return (
-    <div className="activity-item border rounded drop-shadow-sm bg-white">
-      <h1 className="bg-green-600 rounded-t text-white font-subtitulos text-base py-2 pl-2">
+    <div
+      className={`activity-item border rounded drop-shadow-sm bg-white ${
+        filled ? "pointer-events-none opacity-50" : ""
+      }`}
+    >
+      <h1
+        className={`${
+          filled
+            ? "bg-gray-500"
+            : unfilled
+            ? "bg-[#16a34a]"
+            : started
+            ? "bg-[#f0aa28]"
+            : "bg-[#16a34a]"
+        } rounded-t text-white font-subtitulos text-base py-2 pl-2`}
+      >
         Perfil Sensorial disponível
       </h1>
       <div className="pl-2 py-2 font-paragrafos text-sm text-gray-900">
@@ -43,12 +57,18 @@ const AvailableSensoryProfileBox: React.FC<AvailableSensoryProfileBoxProps> = ({
         </p>
       </div>
       <div className="w-full flex justify-center pb-2">
-        <Link
-          href={`/dashboard/fillout/${sensoryProfileId}`}
-          className="duration-100 font-subtitulos text-sm text-green-600 bg-white hover:bg-green-600 hover:text-white border-green-600 border px-3 py-2 my-4 rounded-md"
-        >
-          Preencher agora
-        </Link>
+        {filled ? (
+          <p className="font-subtitulos text-sm text-gray-500 my-4">
+            Perfil já enviado
+          </p>
+        ) : (
+          <Link
+            href={`/dashboard/fillout/${sensoryProfileId}`}
+            className="duration-100 font-subtitulos text-sm text-green-600 bg-white hover:bg-green-600 hover:text-white border-green-600 border px-3 py-2 my-4 rounded-md"
+          >
+            Preencher agora
+          </Link>
+        )}
       </div>
     </div>
   );

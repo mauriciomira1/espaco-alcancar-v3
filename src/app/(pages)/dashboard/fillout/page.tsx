@@ -34,7 +34,7 @@ const Fillout = () => {
     } catch (error) {
       throw new Error("Erro ao buscar dependentes");
     }
-  }; /* retorna [] */
+  };
 
   // Buscar perfil sensorial pelo ID
   const fetchSensoryProfilesOfaChild = async (childId: string) => {
@@ -48,15 +48,17 @@ const Fillout = () => {
         }
       );
       const data = await response.json();
-      setSensoryProfiles((prev) => [...prev, data]);
+      setSensoryProfiles((prev) => {
+        const newProfiles = data.filter(
+          (profile: SensoryProfileResponseInterface) =>
+            !prev.some((existingProfile) => existingProfile.id === profile.id)
+        );
+        return [...prev, ...newProfiles];
+      });
     } catch (error) {
       console.error("Error fetching sensory profile:", error);
     }
   };
-
-  useEffect(() => {
-    console.log(sensoryProfiles);
-  }, [sensoryProfiles]);
 
   useEffect(() => {
     fetchChilds();
@@ -97,12 +99,20 @@ const Fillout = () => {
                     unfilled
                   />
                 );
-              } else {
+              } else if (sensoryProfile.status == "STARTED") {
                 return (
                   <AvailableSensoryProfileBox
                     key={sensoryProfile.id}
                     sensoryProfileId={sensoryProfile.id}
                     started
+                  />
+                );
+              } else {
+                return (
+                  <AvailableSensoryProfileBox
+                    key={sensoryProfile.id}
+                    sensoryProfileId={sensoryProfile.id}
+                    filled
                   />
                 );
               }
