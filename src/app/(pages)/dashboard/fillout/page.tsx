@@ -1,10 +1,7 @@
 "use client";
 import config from "@/app/config/variables";
 import AvailableSensoryProfileBox from "@/components/userDashboard/sensoryProfile/availableSensoryProfileBox";
-import {
-  ChildDefaultResponse,
-  ChildFullDataResponse,
-} from "@/interfaces/ChildInterfaces";
+import { ChildFullDataResponse } from "@/interfaces/ChildInterfaces";
 import { SensoryProfileResponseInterface } from "@/interfaces/SensoryProfileInterfaces";
 import Link from "next/link";
 import React, { useEffect } from "react";
@@ -72,9 +69,6 @@ const Fillout = () => {
     }
   }, [childs]);
 
-  // Caso existam dependentes, serão buscados os Perfis de todos eles e impresso apenas os 'unfilled'
-  /* useEffect(() => {}, [sensoryProfiles]); */
-
   return (
     <div className="flex flex-col px-4 bg-gray-100 h-screen">
       <Link
@@ -89,7 +83,7 @@ const Fillout = () => {
           Preenchimento de dados
         </h1>
         <div className="activity-list grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {sensoryProfiles &&
+          {sensoryProfiles && sensoryProfiles.length > 0 ? (
             sensoryProfiles.map((sensoryProfile) => {
               if (sensoryProfile.status == "UNFILLED") {
                 return (
@@ -107,7 +101,25 @@ const Fillout = () => {
                     started
                   />
                 );
-              } else {
+              }
+            })
+          ) : (
+            <p>Nenhum perfil aqui.</p>
+          )}
+
+          {/*          <div className="activity-item p-4 border rounded shadow">
+            <h2 className="font-titulos text-verde-claro">Perfil Escolar</h2>
+            <p>Descrição da atividade de Perfil Escolar.</p>
+          </div> */}
+        </div>
+
+        <h2 className="font-destaque items-center text-destaque pt-8 text-verde-claro">
+          Histórico
+        </h2>
+        <div className="mb-10 mt-4 activity-list grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {sensoryProfiles &&
+            sensoryProfiles.map((sensoryProfile) => {
+              if (sensoryProfile.status == "FINISHED") {
                 return (
                   <AvailableSensoryProfileBox
                     key={sensoryProfile.id}
@@ -117,11 +129,6 @@ const Fillout = () => {
                 );
               }
             })}
-
-          <div className="activity-item p-4 border rounded shadow">
-            <h2 className="font-titulos text-verde-claro">Perfil Escolar</h2>
-            <p>Descrição da atividade de Perfil Escolar.</p>
-          </div>
         </div>
       </div>
     </div>

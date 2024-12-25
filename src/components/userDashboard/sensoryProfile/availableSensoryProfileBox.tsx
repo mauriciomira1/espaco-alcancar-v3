@@ -44,7 +44,7 @@ const AvailableSensoryProfileBox: React.FC<AvailableSensoryProfileBoxProps> = ({
             : started
             ? "bg-[#f0aa28]"
             : "bg-[#16a34a]"
-        } rounded-t text-white font-subtitulos text-base py-2 pl-2`}
+        } rounded-t text-white font-subtitulos text-base px-6 py-2 pl-2`}
       >
         Perfil Sensorial disponível
       </h1>
