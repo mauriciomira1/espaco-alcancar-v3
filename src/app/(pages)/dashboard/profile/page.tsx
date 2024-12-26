@@ -6,6 +6,9 @@ import config from "@/app/config/variables";
 import Notification from "./notification";
 import Childs from "./childs";
 import { UserDashboardInterface } from "@/interfaces/UserInterfaces";
+import BackToDashboardButton from "@/components/common/Buttons/BackToDashboardButton";
+import { useToast } from "@/hooks/use-toast";
+import { Toaster } from "@/components/ui/toaster";
 
 type FormData = {
   name: string;
@@ -52,6 +55,8 @@ const Profile: React.FC = () => {
   }>({ visible: false, message: "", type: "success" });
   const [token, setToken] = useState<string | null>(null);
   const router = useRouter();
+
+  const { toast } = useToast();
 
   const relationshipOptions = {
     FATHER: "Pai",
@@ -175,10 +180,19 @@ const Profile: React.FC = () => {
         ...prevState,
         [field]: false,
       }));
-      setNotification({
+      /* setNotification({
         visible: true,
         message: `O dado de ${fieldLabels[field]} foi atualizado`,
         type: "success",
+      }); */
+      toast({
+        description: `O dado de ${fieldLabels[field]} foi atualizado`,
+        variant: "default",
+        duration: 2000,
+        style: {
+          backgroundColor: "#10B981",
+          color: "#fff",
+        },
       });
     } catch (error) {
       console.error("Error updating user data:", error);
@@ -197,19 +211,13 @@ const Profile: React.FC = () => {
   const labelClassesName = `font-subtitulos text-sm whitespace-nowrap`;
   const paragraphClassesName = `font-paragrafos pb-1 text-sm`;
   const inputClassesName = `font-paragrafos text-sm bg-gray-200 rounded-md border-[1px] border-gray-400 px-2 py-0.5 w-full`;
-  const divClassesName = `flex space-y-1 items-center gap-1`;
+  const divClassesName = `flex space-y-1 items-center gap-1 border rounded p-2 border-gray-400`;
   const pencilClassesName = `text-gray-500 text-xs`;
   const saveBtnClassesName = `bg-verde-escuro text-white h-6 font-paragrafos text-xs rounded-md px-2 py-0.5`;
 
   return (
-    <div className="w-full h-screen bg-white p-4">
-      <button
-        onClick={() => router.push("/dashboard")}
-        className="flex items-center justify-center bg-verde-escuro text-white mb-8 w-20 rounded-md p-1"
-      >
-        <FaArrowLeft className="mr-1" />
-        Voltar
-      </button>
+    <div className="w-full min:h-screen bg-white p-4">
+      <BackToDashboardButton />
       <form className="space-y-2">
         <div className={divClassesName}>
           <label htmlFor="name" className={labelClassesName}>
@@ -433,7 +441,7 @@ const Profile: React.FC = () => {
           </div>
         </div>
       </form>
-      {notification.visible && (
+      {/* {notification.visible && (
         <Notification
           message={notification.message}
           duration={2000}
@@ -442,7 +450,8 @@ const Profile: React.FC = () => {
           }
           type={notification.type}
         />
-      )}
+      )} */}
+      <Toaster />
       {token ? <Childs token={token!} /> : null}
     </div>
   );

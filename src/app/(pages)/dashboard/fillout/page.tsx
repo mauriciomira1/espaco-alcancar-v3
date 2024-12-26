@@ -1,5 +1,6 @@
 "use client";
 import config from "@/app/config/variables";
+import BackToDashboardButton from "@/components/common/Buttons/BackToDashboardButton";
 import AvailableSensoryProfileBox from "@/components/userDashboard/sensoryProfile/availableSensoryProfileBox";
 import { ChildFullDataResponse } from "@/interfaces/ChildInterfaces";
 import { SensoryProfileResponseInterface } from "@/interfaces/SensoryProfileInterfaces";
@@ -70,14 +71,8 @@ const Fillout = () => {
   }, [childs]);
 
   return (
-    <div className="flex flex-col px-4 bg-gray-100 h-screen">
-      <Link
-        href="/dashboard"
-        className="flex items-center justify-center bg-verde-escuro text-white mt-3 mb-8 w-20 rounded-md p-1"
-      >
-        <FaArrowLeft className="mr-1" />
-        Voltar
-      </Link>
+    <div className="flex flex-col px-4 bg-gray-100 min-h-screen pt-5">
+      <BackToDashboardButton />
       <div className="flex flex-col items-center">
         <h1 className="font-destaque items-center text-destaque pt-8 pb-4 text-verde-escuro">
           Preenchimento de dados
