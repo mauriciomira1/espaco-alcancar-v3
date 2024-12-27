@@ -6,19 +6,45 @@ import { useState, useEffect } from "react";
 import { FaRegCircleUser } from "react-icons/fa6";
 import Link from "next/link";
 import config from "@/app/config/variables";
+import { useToken } from "@/contexts/TokenContext";
 
 const WindowMenu = ({ handleClose }: { handleClose: () => void }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isProfessionalLoggedIn, setIsProfessionalLoggedIn] = useState(false);
+  const { tokenChecked, setTokenChecked } = useToken();
 
-  // Renovar token
+  useEffect(() => {
+    const token = localStorage.getItem("espaco-alcancar");
+    if (token) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+
+    const tokenProfessional = localStorage.getItem(
+      "professional-espaco-alcancar"
+    );
+    if (tokenProfessional) {
+      setIsProfessionalLoggedIn(true);
+    } else {
+      setIsProfessionalLoggedIn(false);
+    }
+  }, []);
+
   const renewToken = async () => {
     const response = await fetch(`${config.apiBaseUrl}/auth/refresh`, {
       method: "POST",
       credentials: "include",
     });
 
-    if (!response.ok) {
+    if (
+      !response.ok &&
+      (window.location.pathname !== "/login" ||
+        window.location.pathname !== "/nosso-espaco" ||
+        window.location.pathname !== "/servicos" ||
+        window.location.pathname !== "/sobre" ||
+        window.location.pathname !== "/trabalhe-conosco")
+    ) {
       window.location.href = "/login";
       return;
     }
@@ -34,10 +60,15 @@ const WindowMenu = ({ handleClose }: { handleClose: () => void }) => {
     if (!token) {
       await renewToken();
     }
+    setTokenChecked(true);
   };
 
   useEffect(() => {
-    checkToken();
+    if (!tokenChecked) {
+      setTokenChecked(true);
+      checkToken();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const linksClass =

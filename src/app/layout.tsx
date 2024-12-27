@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { inter, quicksand, raleway } from "./fonts";
 import ClientLayout from "./clientLayout";
 import { Toaster } from "@/components/ui/toaster";
+import { TokenProvider } from "@/contexts/TokenContext";
 
 export const metadata: Metadata = {
   title: "Espaço Alcançar",
@@ -19,7 +20,9 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${raleway.variable} ${quicksand.variable} relative bg-main min-h-screen vsc-initialized`}
       >
-        <ClientLayout>{children}</ClientLayout>
+        <TokenProvider>
+          <ClientLayout>{children}</ClientLayout>
+        </TokenProvider>
         <Toaster />
       </body>
     </html>

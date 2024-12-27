@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 
 const MenuPrincipal = () => {
   const [isMobile, setIsMobile] = useState(false);
+  const [tokenChecked, setTokenChecked] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
