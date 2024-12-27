@@ -15,6 +15,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 // Variáveis
 import config from "@/app/config/variables";
 import { useRouter } from "next/navigation";
+import { LoginResponseInterface } from "@/interfaces/LoginInterfaces";
 
 // Validação de formulário com Zod
 const createUserFormSchema = z.object({
@@ -74,7 +75,7 @@ const FormProfessionalLogin: React.FC = () => {
         throw new Error("Falha no login. Verifique suas credenciais.");
       }
 
-      const result = await response.json();
+      const result: LoginResponseInterface = await response.json();
 
       localStorage.setItem("professional-espaco-alcancar", result.token);
       router.push("/professional/dashboard");

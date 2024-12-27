@@ -15,8 +15,8 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 // Variáveis
 import config from "@/app/config/variables";
-import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
+import { LoginResponseInterface } from "@/interfaces/LoginInterfaces";
 
 // Validação de formulário com Zod
 const createUserFormSchema = z.object({
@@ -74,7 +74,7 @@ const FormularioLogin: React.FC = () => {
         throw new Error("Falha no login. Verifique suas credenciais.");
       }
 
-      const result = await response.json();
+      const result: LoginResponseInterface = await response.json();
       localStorage.setItem("espaco-alcancar", result.token);
 
       window.location.href = "/dashboard";

@@ -38,10 +38,10 @@ const MenuMobile = () => {
           <WindowMenu handleClose={() => setIsOpen(false)} />
         </div>
         <span
-          className="text-verde-escuro hover:text-verde-claro active:text-verde-claro text-4xl duration-150"
+          className="text-verde-escuro mt-0.5 hover:text-verde-claro active:text-verde-claro text-4xl duration-150"
           onClick={() => setIsOpen(!isOpen)}
         >
-          <HiMenu />
+          <HiMenu size={26} />
         </span>
         <Link href="/">
           <Image src={logo} alt="Logotipo Espaço Alcançar" width={100} />

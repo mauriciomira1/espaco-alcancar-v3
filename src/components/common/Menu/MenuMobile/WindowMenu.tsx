@@ -5,27 +5,39 @@ import BtnMarcarAgora from "../MenuLaptop/btnMarcarAgora";
 import { useState, useEffect } from "react";
 import { FaRegCircleUser } from "react-icons/fa6";
 import Link from "next/link";
+import config from "@/app/config/variables";
 
 const WindowMenu = ({ handleClose }: { handleClose: () => void }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isProfessionalLoggedIn, setIsProfessionalLoggedIn] = useState(false);
 
-  useEffect(() => {
-    const token = localStorage.getItem("espaco-alcancar");
-    if (token) {
-      setIsLoggedIn(true);
-    } else {
-      setIsLoggedIn(false);
+  // Renovar token
+  const renewToken = async () => {
+    const response = await fetch(`${config.apiBaseUrl}/auth/refresh`, {
+      method: "POST",
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      window.location.href = "/login";
+      return;
     }
 
-    const tokenProfessional = localStorage.getItem(
-      "professional-espaco-alcancar"
-    );
-    if (tokenProfessional) {
-      setIsProfessionalLoggedIn(true);
-    } else {
-      setIsProfessionalLoggedIn(false);
+    const data = await response.json();
+    const newToken = data.token;
+    localStorage.setItem("espaco-alcancar", newToken);
+    setIsLoggedIn(true);
+  };
+
+  const checkToken = async () => {
+    const token = localStorage.getItem("espaco-alcancar");
+    if (!token) {
+      await renewToken();
     }
+  };
+
+  useEffect(() => {
+    checkToken();
   }, []);
 
   const linksClass =

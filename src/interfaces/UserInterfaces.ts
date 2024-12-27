@@ -1,6 +1,5 @@
 // src/interfaces/user/userDashboardResponse.ts
 
-import { ChildFullDataResponse } from "./ChildInterfaces";
 import { ProfileType } from "./ProfileInterfaces";
 
 export interface Address {
