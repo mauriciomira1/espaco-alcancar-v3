@@ -58,7 +58,6 @@ const TrabalheConosco = () => {
           <Image
             src={logo}
             alt="Logotipo Espaço Alcançar"
-            width={200}
             quality={100}
             className="py-10 max-md:w-32 max-[520px]:w-24 max-[470px]:w-20 max-[360px]:hidden"
             data-aos="fade-right"

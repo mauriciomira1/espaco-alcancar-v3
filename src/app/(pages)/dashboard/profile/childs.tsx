@@ -42,7 +42,6 @@ const Childs = ({ token }: ChildsProps) => {
   const sortedChildren = children.sort((a, b) => a.name.localeCompare(b.name));
 
   const fetchChildrenData = async () => {
-    console.log(token);
     try {
       if (!token) {
         console.error("Token não disponível");

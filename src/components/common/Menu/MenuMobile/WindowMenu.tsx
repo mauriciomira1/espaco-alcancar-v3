@@ -9,25 +9,13 @@ import config from "@/app/config/variables";
 import { useToken } from "@/contexts/TokenContext";
 
 const WindowMenu = ({ handleClose }: { handleClose: () => void }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  //const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isProfessionalLoggedIn, setIsProfessionalLoggedIn] = useState(false);
   const { tokenChecked, setTokenChecked } = useToken();
 
   useEffect(() => {
-    const token = localStorage.getItem("espaco-alcancar");
-    if (token) {
-      setIsLoggedIn(true);
-    } else {
-      setIsLoggedIn(false);
-    }
-
-    const tokenProfessional = localStorage.getItem(
-      "professional-espaco-alcancar"
-    );
-    if (tokenProfessional) {
-      setIsProfessionalLoggedIn(true);
-    } else {
-      setIsProfessionalLoggedIn(false);
+    if (!tokenChecked) {
+      checkToken();
     }
   }, []);
 
@@ -36,14 +24,15 @@ const WindowMenu = ({ handleClose }: { handleClose: () => void }) => {
       method: "POST",
       credentials: "include",
     });
+    console.log("Chamou o refresh token");
 
     if (
       !response.ok &&
-      (window.location.pathname !== "/login" ||
-        window.location.pathname !== "/nosso-espaco" ||
-        window.location.pathname !== "/servicos" ||
-        window.location.pathname !== "/sobre" ||
-        window.location.pathname !== "/trabalhe-conosco")
+      window.location.pathname !== "/" &&
+      window.location.pathname !== "/nosso-espaco" &&
+      window.location.pathname !== "/servicos" &&
+      window.location.pathname !== "/sobre" &&
+      window.location.pathname !== "/trabalhe-conosco"
     ) {
       window.location.href = "/login";
       return;
@@ -52,24 +41,54 @@ const WindowMenu = ({ handleClose }: { handleClose: () => void }) => {
     const data = await response.json();
     const newToken = data.token;
     localStorage.setItem("espaco-alcancar", newToken);
-    setIsLoggedIn(true);
   };
 
+  // Função que verifica se o token do usuário/profissional é válido e renova se necessário
   const checkToken = async () => {
-    const token = localStorage.getItem("espaco-alcancar");
-    if (!token) {
+    try {
+      const tokenUser = localStorage.getItem("espaco-alcancar");
+      if (
+        await validateToken(tokenUser, `${config.apiBaseUrl}/auth/validate`)
+      ) {
+        console.log("Token do usuário válido: ", tokenUser);
+        setTokenChecked(true);
+        return;
+      }
+
+      const tokenProfessional = localStorage.getItem(
+        "professional-espaco-alcancar"
+      );
+      if (
+        tokenProfessional &&
+        (await validateToken(
+          tokenProfessional,
+          `${config.apiBaseUrl}/auth/professional/validate`
+        ))
+      ) {
+        console.log("Token do profissional válido: ", tokenProfessional);
+        setTokenChecked(true);
+        setIsProfessionalLoggedIn(true);
+        return;
+      }
+    } catch (error) {
+      console.log("deu BO, caiu na linha 74 do WuindowMenu");
       await renewToken();
+      console.log("Token renovado");
     }
-    setTokenChecked(true);
   };
 
-  useEffect(() => {
-    if (!tokenChecked) {
-      setTokenChecked(true);
-      checkToken();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // Função que valida o token do usuário/profissional
+  const validateToken = async (token: string | null, url: string) => {
+    if (!token) return false;
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(token),
+    });
+    return response.ok;
+  };
 
   const linksClass =
     "text-verde-escuro uppercase py-4 border-b-[1px] w-4/5 border-verde-escuro font-subtitulos text-center";

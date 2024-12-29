@@ -18,7 +18,8 @@ const MissaoVisaoValores = () => {
         <Image
           src={astronautaCoracao}
           alt="Astrouanta no foguete"
-          width={350}
+          width={250}
+          height={250}
           quality={100}
           className="max-2xl:h-[300px] max-lg:h-72 max-md:h-72 max-[630px]:h-64 max-[425px]:h-56 h-[350px]"
           data-aos="fade-up-left"

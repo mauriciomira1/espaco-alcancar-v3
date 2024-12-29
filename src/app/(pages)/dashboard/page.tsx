@@ -19,7 +19,7 @@ const Dashboard = () => {
     setToken(currentToken);
     const fetchUserData = async () => {
       if (!currentToken) {
-        console.error("currentToken not found");
+        //console.error("currentToken not found");
         setError("Token not found");
         router.push("/login");
         return;
@@ -36,14 +36,14 @@ const Dashboard = () => {
 
         if (response.status !== 200) {
           router.push("/login");
-          console.error("Token inválido");
+          //console.error("Token inválido");
           setError("Token inválido");
           return;
         }
 
         if (!response.ok) {
           const errorData = await response.json();
-          console.error("Error response:", errorData);
+          //console.error("Error response:", errorData);
           setError("Failed to fetch user data: " + errorData.message);
           return;
         }

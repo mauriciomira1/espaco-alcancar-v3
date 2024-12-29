@@ -20,8 +20,10 @@ const Sobre = () => {
         <Image
           alt="Logotipo Espaço Alcançar"
           src={logotipo}
-          height={350}
+          width={150}
+          height={150}
           quality={100}
+          priority
           className="max-2xl:h-[300px] max-lg:h-96 max-md:h-72 max-[630px]:h-64 max-[425px]:h-56 h-[350px]"
           data-aos="zoom-in"
           data-aos-easing="ease-out-cubic"

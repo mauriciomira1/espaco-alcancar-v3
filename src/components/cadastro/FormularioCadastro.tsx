@@ -99,7 +99,6 @@ const FormularioCadastro = () => {
       },
     };
 
-    console.log("Payload: ", payload);
     try {
       const response = await fetch(`${config.apiBaseUrl}/user/new`, {
         method: "POST",
@@ -134,7 +133,6 @@ const FormularioCadastro = () => {
       }
 
       const userId = await response.json();
-      console.log("Cadastro bem-sucedido:", userId);
       setSuccessMessage(true);
 
       // Redirecionar o usuário para a página de login
