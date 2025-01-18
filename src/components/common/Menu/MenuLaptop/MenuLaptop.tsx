@@ -40,7 +40,7 @@ const MenuLaptop = () => {
           {isProfessionalLoggedIn ? (
             <ItemMenuModelo2 to="/professional/dashboard" name="Acessar" />
           ) : (
-            <ItemMenuModelo2 to="/login" name="Acessar" />
+            <ItemMenuModelo2 to="/dashboard" name="Acessar" />
           )}
           <BtnMarcarAgora href="https://wa.me/5561994250846" />
         </ul>
